@@ -1,0 +1,5 @@
+# Level v1.0
+MAP=map01.txt
+MONSTER=monster01.txt
+ITEM=item01.txt
+# EOF
