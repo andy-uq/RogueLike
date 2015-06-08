@@ -6,7 +6,7 @@ namespace carl
 	{
 		void EndGame();
       void SetStatus(string format, params object[] args);
-		Tile[,] GetCurrentMap();
+		Map Map { get; }
 	}
 
 	public class GameEngine : IGameEngine
@@ -14,7 +14,7 @@ namespace carl
 		public Player Player;
 		public CommandProcessor CommandProcessor;
 		public string CommandLine { get; set; }
-		public Tile[,] Map;
+		public Map Map { get; set; }
 
 		public bool IsActive;
 
@@ -35,11 +35,6 @@ namespace carl
 		{
 			StatusLine = string.Format(format, args);
 			StatusTtl = 60;
-		}
-
-		public Tile[,] GetCurrentMap()
-		{
-			return Map;
 		}
 	}
 }

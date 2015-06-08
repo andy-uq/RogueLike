@@ -26,29 +26,22 @@ namespace carl
 		{
 			var position = _player.Position.Add(xDelta, yDelta);
 
-			var map = _game.GetCurrentMap();
-			if (map.IsOccupied(position))
-				return Bump(map, position);
+			if (_game.Map.IsOccupied(position))
+				return Bump(_game.Map, position);
 
 			_player.Position = position;
 			return true;
 		}
 
-		private bool Bump(Tile[,] map, Point point)
+		private bool Bump(Map map, Point point)
 		{
-			var tile = map[point.Y, point.X];
+			var tile = map[point];
 			if (tile == Tiles.ClosedDoor)
 			{
-				return OpenDoor(map, point);
+				return map.OpenDoor(point);
 			}
 
 			return false;
-		}
-
-		private bool OpenDoor(Tile[,] map, Point point)
-		{
-			map[point.Y, point.X] = Tiles.OpenDoor;
-			return true;
 		}
 	}
 }

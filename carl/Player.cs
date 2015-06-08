@@ -9,4 +9,14 @@ namespace carl
 
 		public Point Position { get; set; }
 	}
+
+	public class Mobile
+	{
+		public Mobile(Point position)
+		{
+			Position = position;
+		}
+
+		public Point Position { get; set; }
+	}
 }

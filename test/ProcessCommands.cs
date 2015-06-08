@@ -15,7 +15,7 @@ namespace test
 		public void Move(int x, int y, bool success)
 		{
 			var gameEngine = new Mock<IGameEngine>();
-			gameEngine.Setup(_ => _.GetCurrentMap()).Returns(Data.Maps.Small);
+			gameEngine.SetupGet(_ => _.Map).Returns(Data.Maps.Small);
 			var cp = new CommandProcessor(gameEngine.Object, new Player(position: new Point(1, 1)));
 
 			cp.Move(x, y).Should().Be(success);
@@ -25,7 +25,7 @@ namespace test
 		public void OpenDoor()
 		{
 			var gameEngine = new Mock<IGameEngine>();
-			gameEngine.Setup(_ => _.GetCurrentMap()).Returns(Data.Maps.HasDoor());
+			gameEngine.SetupGet(_ => _.Map).Returns(Data.Maps.HasDoor());
 
 			var player = new Player(position:new Point(1, 1));
 			var cp = new CommandProcessor(gameEngine.Object, player);
@@ -34,7 +34,7 @@ namespace test
 			player.Position.X.Should().Be(1);
 			player.Position.Y.Should().Be(1);
 
-			gameEngine.Object.GetCurrentMap()[1, 2].Should().Be(Tiles.OpenDoor);
+			gameEngine.Object.Map[1, 2].Should().Be(Tiles.OpenDoor);
 		}
 
 		[Test]

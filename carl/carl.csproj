@@ -52,6 +52,7 @@
     <Compile Include="GameEngine.cs" />
     <Compile Include="IConsole.cs" />
     <Compile Include="InputLoop.cs" />
+    <Compile Include="Map.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="PointExtensions.cs" />
     <Compile Include="RenderLoop.cs" />

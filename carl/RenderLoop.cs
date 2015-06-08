@@ -74,27 +74,23 @@ namespace carl
 			Console.Write(Position.FpsCounter, $"{_fps:n0}", ConsoleColor.Magenta);
 		}
 
-		private void RenderMap(Point player, Tile[,] map)
+		private void RenderMap(Point player, Map map)
 		{
-			var left = player.X - 15;
-			var top = player.Y - 8;
-
-			var width = map.GetLength(1);
-			var height = map.GetLength(0);
+			var origin = player.Add(- 15, - 8);
 
 			for (var y = 0; y < 16; y++)
 			{
 				for (var x = 0; x < 30; x++)
 				{
-					if (left + x < 0 || top + y < 0)
+					if (origin.X + x < 0 || origin.Y + y < 0)
 						continue;
 
-					if (left + x >= width || top + y >= height)
+					if (origin.X + x >= map.Dimensions.X || origin.Y + y >= map.Dimensions.Y)
 						continue;
 
 					Console.Write(
 						Position.Map.Add(x, y), 
-						map[top + y, left + x].Glyph.ToString(), 
+						map[origin.Add(x, y)].Glyph.ToString(), 
 						ConsoleColor.Gray);
 				}
 			}
