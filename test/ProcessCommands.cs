@@ -16,7 +16,7 @@ namespace test
 		{
 			var gameEngine = new Mock<IGameEngine>();
 			gameEngine.Setup(_ => _.GetCurrentMap()).Returns(Data.Maps.Small);
-			var cp = new CommandProcessor(gameEngine.Object, new Player() {X = 1, Y = 1});
+			var cp = new CommandProcessor(gameEngine.Object, new Player(position: new Point(1, 1)));
 
 			cp.Move(x, y).Should().Be(success);
 		}
@@ -27,12 +27,12 @@ namespace test
 			var gameEngine = new Mock<IGameEngine>();
 			gameEngine.Setup(_ => _.GetCurrentMap()).Returns(Data.Maps.HasDoor());
 
-			var player = new Player() { X = 1, Y = 1 };
+			var player = new Player(position:new Point(1, 1));
 			var cp = new CommandProcessor(gameEngine.Object, player);
 			cp.Move(1, 0).Should().BeTrue();
 
-			player.X.Should().Be(1);
-			player.Y.Should().Be(1);
+			player.Position.X.Should().Be(1);
+			player.Position.Y.Should().Be(1);
 
 			gameEngine.Object.GetCurrentMap()[1, 2].Should().Be(Tiles.OpenDoor);
 		}
@@ -41,7 +41,7 @@ namespace test
 		public void Quit()
 		{
 			var gameEngine = new Mock<IGameEngine>();
-			var cp = new CommandProcessor(gameEngine.Object, new Player() { X = 1, Y = 1 });
+			var cp = new CommandProcessor(gameEngine.Object, new Player(position:new Point(1, 1)));
 
 			cp.Add("quit");
 
@@ -57,7 +57,7 @@ namespace test
 			gameEngine.Setup(x => x.SetStatus(Moq.It.IsAny<string>(), It.IsAny<object[]>()))
 				.Callback<string, object[]>((format, args) => status = string.Format(format, args));
 
-			var cp = new CommandProcessor(gameEngine.Object, new Player() { X = 1, Y = 1 });
+			var cp = new CommandProcessor(gameEngine.Object, new Player(position: new Point(1, 1)));
 
 			cp.Add("bleh");
 

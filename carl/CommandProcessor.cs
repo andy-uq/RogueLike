@@ -24,32 +24,30 @@ namespace carl
 
 		public bool Move(int xDelta = 0, int yDelta = 0)
 		{
-			var x = _player.X + xDelta;
-			var y = _player.Y + yDelta;
+			var position = _player.Position.Add(xDelta, yDelta);
 
 			var map = _game.GetCurrentMap();
-			if (map.IsOccupied(x, y))
-				return Bump(map, x, y);
+			if (map.IsOccupied(position))
+				return Bump(map, position);
 
-			_player.Y = y;
-			_player.X = x;
+			_player.Position = position;
 			return true;
 		}
 
-		private bool Bump(Tile[,] map, int x, int y)
+		private bool Bump(Tile[,] map, Point point)
 		{
-			var tile = map[y, x];
+			var tile = map[point.Y, point.X];
 			if (tile == Tiles.ClosedDoor)
 			{
-				return OpenDoor(map, x, y);
+				return OpenDoor(map, point);
 			}
 
 			return false;
 		}
 
-		private bool OpenDoor(Tile[,] map, int x, int y)
+		private bool OpenDoor(Tile[,] map, Point point)
 		{
-			map[y, x] = Tiles.OpenDoor;
+			map[point.Y, point.X] = Tiles.OpenDoor;
 			return true;
 		}
 	}

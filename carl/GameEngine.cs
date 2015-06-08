@@ -13,13 +13,18 @@ namespace carl
 	{
 		public Player Player;
 		public CommandProcessor CommandProcessor;
-		public string CommandLine;
+		public string CommandLine { get; set; }
 		public Tile[,] Map;
 
 		public bool IsActive;
 
 		public string StatusLine;
 		public int StatusTtl;
+
+		public GameEngine()
+		{
+			CommandLine = string.Empty;
+		}
 
 		public void EndGame()
 		{

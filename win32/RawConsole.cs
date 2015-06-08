@@ -3,7 +3,7 @@ using static carl.Win32Console;
 
 namespace carl
 {
-	public class RawConsole
+	public class RawConsole : IConsole, IConsoleInput
 	{
 		private readonly IntPtr _primaryHandle;
 		private IntPtr _active, _draw;
@@ -21,11 +21,24 @@ namespace carl
 			_foreColour = ConsoleColor.Gray;
 			_backColour = ConsoleColor.Black;
 
-			SetCursorPosition(2, 25);
+			if (_cursorPosition.X == 2 - 1 && _cursorPosition.Y == 25 - 1)
+				return;
+
+			_cursorPosition = new Coord(2 - 1, 25 - 1);
+			SetConsoleCursorPosition(_draw, _cursorPosition);
+			SetConsoleCursorPosition(_active, _cursorPosition);
 		}
 
-		public void SetCursorPosition(int column, int row)
+		public ConsoleKeyInfo ReadKey()
 		{
+			return Console.ReadKey(intercept: true);
+		}
+
+		public void SetCursorPosition(Point point)
+		{
+			int column = point.X;
+			int row = point.Y;
+
 			if (_cursorPosition.X == column - 1 && _cursorPosition.Y == row - 1)
 				return;
 
@@ -60,13 +73,13 @@ namespace carl
 			_backColour = backColor.Value;
 		}
 
-		public void Write(int column, int row, string text, ConsoleColor? color = null, ConsoleColor? backColor = null)
+		public void Write(Point point, string text, ConsoleColor? color = null, ConsoleColor? backColor = null)
 		{
 			if (string.IsNullOrEmpty(text))
 				return;
 
-			var x = (short) (column - 1);
-			var y = (short) (row - 1);
+			var x = (short) (point.X - 1);
+			var y = (short) (point.Y - 1);
 			var length = (short) text.Length;
 
 			var buffer = new CharInfo[text.Length, 1];

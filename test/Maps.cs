@@ -16,7 +16,7 @@ namespace test
 		public void OutOfBounds(int x, int y, bool outOfBounds)
 		{
 			var map = Data.Maps.Small();
-			map.IsOccupied(x, y).Should().Be(outOfBounds);
+			map.IsOccupied(new Point(x, y)).Should().Be(outOfBounds);
 		}
 	}
 }

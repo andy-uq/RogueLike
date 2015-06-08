@@ -2,16 +2,16 @@ namespace carl
 {
 	public static class MapExtensions
 	{
-		public static bool IsOccupied(this Tile[,] map, int x, int y)
+		public static bool IsOccupied(this Tile[,] map, Point position)
 		{
-			if (x < 0 || y < 0)
+			if (position.X < 0 || position.Y < 0)
 				return true;
 
 			var maxX = map.GetLength(1);
 			var maxY = map.GetLength(0);
-			if (x < maxX && y < maxY)
+			if (position.X < maxX && position.Y < maxY)
 			{
-				var tile = map[y, x];
+				var tile = map[position.Y, position.X];
 				return tile == Tiles.Wall || tile == Tiles.ClosedDoor;
 			}
 
