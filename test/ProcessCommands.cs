@@ -14,9 +14,11 @@ namespace test
 		[TestCase(1, 1, true)]
 		public void Move(int x, int y, bool success)
 		{
+			var player = new Player(position: new Point(1, 1));
 			var gameEngine = new Mock<IGameEngine>();
 			gameEngine.SetupGet(_ => _.Map).Returns(Data.Maps.Small);
-			var cp = new CommandProcessor(gameEngine.Object, new Player(position: new Point(1, 1)));
+			gameEngine.SetupGet(_ => _.Player).Returns(player);
+			var cp = new CommandProcessor(gameEngine.Object);
 
 			cp.Move(x, y).Should().Be(success);
 		}
@@ -24,12 +26,13 @@ namespace test
 		[Test]
 		public void OpenDoor()
 		{
+			var player = new Player(position: new Point(1, 1));
 			var gameEngine = new Mock<IGameEngine>();
 			gameEngine.SetupGet(_ => _.Map).Returns(Data.Maps.HasDoor());
+			gameEngine.SetupGet(_ => _.Player).Returns(player);
 
-			var player = new Player(position:new Point(1, 1));
-			var cp = new CommandProcessor(gameEngine.Object, player);
-			cp.Move(1, 0).Should().BeTrue();
+			var cp = new CommandProcessor(gameEngine.Object);
+			cp.Move(0, 1).Should().BeTrue();
 
 			player.Position.X.Should().Be(1);
 			player.Position.Y.Should().Be(1);
@@ -41,7 +44,7 @@ namespace test
 		public void Quit()
 		{
 			var gameEngine = new Mock<IGameEngine>();
-			var cp = new CommandProcessor(gameEngine.Object, new Player(position:new Point(1, 1)));
+			var cp = new CommandProcessor(gameEngine.Object);
 
 			cp.Add("quit");
 
@@ -57,7 +60,7 @@ namespace test
 			gameEngine.Setup(x => x.SetStatus(Moq.It.IsAny<string>(), It.IsAny<object[]>()))
 				.Callback<string, object[]>((format, args) => status = string.Format(format, args));
 
-			var cp = new CommandProcessor(gameEngine.Object, new Player(position: new Point(1, 1)));
+			var cp = new CommandProcessor(gameEngine.Object);
 
 			cp.Add("bleh");
 

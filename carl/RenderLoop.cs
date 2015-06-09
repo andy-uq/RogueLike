@@ -88,9 +88,12 @@ namespace carl
 					if (origin.X + x >= map.Dimensions.X || origin.Y + y >= map.Dimensions.Y)
 						continue;
 
+					var mapPoint = origin.Add(x, y);
+					var glyph = map.GetGlyph(mapPoint);
+
 					Console.Write(
 						Position.Map.Add(x, y), 
-						map[origin.Add(x, y)].Glyph.ToString(), 
+						glyph.ToString(), 
 						ConsoleColor.Gray);
 				}
 			}

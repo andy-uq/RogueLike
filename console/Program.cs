@@ -17,12 +17,15 @@ namespace carl
 			{
 				IsActive = true,
 				CommandLine = "",
+				ObjectLoader = new ObjectLoader(),
 				Player = new Player(position: new Point(x: 1, y: 7)),
 			};
 
-			game.Map = MapReader.LoadMap(game, "map01.txt");
-			game.CommandProcessor = new CommandProcessor(game, game.Player);
-			
+			var reader = new MapReader(game);
+			game.Map = reader.LoadLevel("level01.txt");
+			game.CommandProcessor = new CommandProcessor(game);
+			game.Map.InitialiseLevel(game.Player);
+
 			_renderLoop = new RenderLoop(game, new RawConsole());
 			_inputLoop = new InputLoop(game, new RawConsole());
 

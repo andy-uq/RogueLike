@@ -18,5 +18,6 @@ namespace carl
 		}
 
 		public Point Position { get; set; }
+		public char Glyph { get; set; }
 	}
 }

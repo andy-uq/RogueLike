@@ -3,12 +3,12 @@ namespace carl
 	public class CommandProcessor
 	{
 		private readonly IGameEngine _game;
-		private readonly Player _player;
 
-		public CommandProcessor(IGameEngine game, Player player)
+		private Player Player => _game.Player;
+
+		public CommandProcessor(IGameEngine game)
 		{
 			_game = game;
-			_player = player;
 		}
 
 		public void Add(string command)
@@ -24,12 +24,12 @@ namespace carl
 
 		public bool Move(int xDelta = 0, int yDelta = 0)
 		{
-			var position = _player.Position.Add(xDelta, yDelta);
+			var position = Player.Position.Add(xDelta, yDelta);
 
 			if (_game.Map.IsOccupied(position))
 				return Bump(_game.Map, position);
 
-			_player.Position = position;
+			Player.Position = position;
 			return true;
 		}
 

@@ -39,7 +39,7 @@ namespace test
 					for (var x = 0; x < width; x++)
 						tiles[y, x] = data[y, x].ToTile();
 
-				return new Map(tiles);
+				return new Map(tiles, default(Point), Enumerable.Empty<Mobile>());
 			}
 		}
 	}

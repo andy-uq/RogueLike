@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace carl
@@ -6,17 +6,29 @@ namespace carl
 	public class Map
 	{
 		private readonly Tile[,] _tiles;
+		private readonly List<Mobile> _mobs;
 
-		public Map(Tile[,] tiles)
+		public Map(Tile[,] tiles, Point startingPosition, IEnumerable<Mobile> mobs)
 		{
 			_tiles = tiles;
+			_mobs = mobs.ToList();
+
 			Dimensions = new Point(_tiles.GetLength(0), _tiles.GetLength(1));
+			StartingPosition = startingPosition;
 		}
 
-		public Tile this[int x, int y] => _tiles[y, x];
-		public Tile this[Point point] => _tiles[point.Y, point.X];
-
 		public Point Dimensions { get; }
+		public Point StartingPosition { get; private set; }
+
+		public Tile this[int x, int y] => _tiles[x, y];
+		public Tile this[Point point] => _tiles[point.X, point.Y];
+
+		public IEnumerable<Mobile> Mobiles => _mobs;
+
+		public void InitialiseLevel(Player player)
+		{
+			player.Position = StartingPosition;
+		}
 
 		public bool IsOccupied(Point point)
 		{
@@ -34,34 +46,19 @@ namespace carl
 
 		public bool OpenDoor(Point point)
 		{
-			_tiles[point.Y, point.X] = Tiles.OpenDoor;
+			_tiles[point.X, point.Y] = Tiles.OpenDoor;
 			return true;
 		}
-	}
 
-	public class MapReader
-	{
-		public static Map LoadMap(GameEngine game, string mapFileName)
+		public char GetGlyph(Point point)
 		{
-			var mapData = File.ReadAllLines(mapFileName).Select(t => t.ToArray()).ToArray();
-			var map = new Tile[mapData.Count(), mapData.Max(l => l.Length)];
+			var mobile = GetMobile(point);
+			return mobile?.Glyph ?? this[point].Glyph;
+		}
 
-			int y = 0;
-			foreach (var line in mapData)
-			{
-				for (var x = 0; x < line.Length; x++)
-				{
-					map[y, x] = mapData[y][x].ToTile();
-					if (mapData[y][x] == '@')
-					{
-						game.Player.Position = new Point(x, y);
-					}
-				}
-
-				y++;
-			}
-
-			return new Map(map);
+		private Mobile GetMobile(Point point)
+		{
+			return Mobiles.FirstOrDefault(m => m.Position == point);
 		}
 	}
 }
