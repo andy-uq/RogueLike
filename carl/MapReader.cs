@@ -34,9 +34,9 @@ namespace carl
 			_mobs = new List<Mobile>();
 		}
 
-		public Map LoadLevel(string levelFileName)
+		public Map LoadLevel(string name)
 		{
-			var level = _gameEngine.ObjectLoader.Load<Definitions.Level>(levelFileName);
+			var level = _gameEngine.ObjectLoader.Load<Definitions.Level>(name);
 
 			_monsterDefinitions = _gameEngine.ObjectLoader.LoadAll<Definitions.Monster>(level.Monsters);
 			var tileData = _gameEngine.ObjectLoader.LoadTiles(level.Map);
