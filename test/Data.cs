@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using carl;
+using RogueLike.Definitions;
 
-namespace test
+namespace RogueLike.Tests
 {
 	public static class Data
 	{
@@ -44,5 +42,8 @@ namespace test
 				return new Map(tiles, default(Point), Enumerable.Empty<Mobile>());
 			}
 		}
+
+		public static List<Monster> Monsters = new List<Monster>() {new Monster()};
+		public static Level Level = new Level() {Map = "map", Monsters = "monsters"};
 	}
 }

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace carl
+namespace RogueLike
 {
 	public class RenderLoop
 	{

@@ -1,6 +1,6 @@
 using System;
 
-namespace carl
+namespace RogueLike
 {
 	public interface IConsole
 	{

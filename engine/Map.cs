@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace carl
+namespace RogueLike
 {
 	public class Map
 	{

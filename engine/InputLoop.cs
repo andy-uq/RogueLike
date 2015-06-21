@@ -1,12 +1,7 @@
 ﻿using System;
 
-namespace carl
+namespace RogueLike
 {
-	public interface IConsoleInput
-	{
-		ConsoleKeyInfo ReadKey();
-	}
-
 	public class InputLoop
 	{
 		private readonly GameEngine _game;

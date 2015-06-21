@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using carl;
-using carl.Definitions;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using RogueLike.Definitions;
 
-namespace test
+namespace RogueLike.Tests
 {
 	[TestFixture]
 	public class Maps
@@ -40,8 +39,8 @@ namespace test
 		public void LoadLevel()
 		{
 			var objectLoader = new Mock<IObjectLoader>(MockBehavior.Strict);
-			objectLoader.Setup(x => x.Load<Level>("name")).Returns(new Level() {Map = "map", Monsters = "monsters"});
-			objectLoader.Setup(x => x.LoadAll<Monster>("monsters")).Returns(new Monster() {}.ToList());
+			objectLoader.Setup(x => x.Load<Level>("name")).Returns(Data.Level);
+			objectLoader.Setup(x => x.LoadAll<Monster>("monsters")).Returns(Data.Monsters);
 			objectLoader.Setup(x => x.LoadTiles("map")).Returns(Data.Tiles.Small);
 
 			var gameEngine = new Mock<IGameEngine>(MockBehavior.Strict);
@@ -61,10 +60,6 @@ namespace test
 		public static IEnumerable<T> AsEnumerable<T>(this T source)
 		{
 			yield return source;
-		}
-		public static List<T> ToList<T>(this T source)
-		{
-			return new List<T>() { source };
 		}
 	}
 }

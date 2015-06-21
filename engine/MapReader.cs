@@ -2,25 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using carl.Definitions;
+using RogueLike.Definitions;
 
-namespace carl
+namespace RogueLike
 {
-	namespace Definitions
-	{
-		public class Level
-		{
-			public string Map { get; set; }
-			public string Monsters { get; set; }
-		}
-
-		public class Monster
-		{
-			public int Id { get; set; }
-			public string Glyph { get; set; }
-		}
-	}
-
 	public class MapReader
 	{
 		private readonly IGameEngine _gameEngine;

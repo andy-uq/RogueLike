@@ -1,4 +1,4 @@
-﻿namespace carl
+﻿namespace RogueLike
 {
 	public class Tile
 	{

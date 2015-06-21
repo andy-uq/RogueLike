@@ -7,8 +7,8 @@
     <ProjectGuid>{33AFAEB6-2AF1-4370-A711-0695444EA320}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>carl_console</RootNamespace>
-    <AssemblyName>carl-console</AssemblyName>
+    <RootNamespace>RogueLike.Console</RootNamespace>
+    <AssemblyName>RogueLike.Console</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -50,9 +50,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\carl\carl.csproj">
+    <ProjectReference Include="..\engine\engine.csproj">
       <Project>{CC782B1A-4E14-44B9-A97A-B802F9EB4B97}</Project>
-      <Name>carl</Name>
+      <Name>engine</Name>
     </ProjectReference>
     <ProjectReference Include="..\win32\win32.csproj">
       <Project>{E1764D05-A160-4450-A59F-F1841852FB57}</Project>

@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace carl
+namespace RogueLike.Win32
 {
 	internal static class Win32Console
 	{

@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using carl;
 
-namespace win32
+namespace RogueLike.Win32
 {
 	public class ObjectLoader : IObjectLoader
 	{

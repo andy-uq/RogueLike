@@ -7,8 +7,8 @@
     <ProjectGuid>{CC782B1A-4E14-44B9-A97A-B802F9EB4B97}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>carl</RootNamespace>
-    <AssemblyName>carl</AssemblyName>
+    <RootNamespace>RogueLike</RootNamespace>
+    <AssemblyName>RogueLike.Engine</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -38,11 +38,19 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LanguageExt.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LanguageExt.1.0.0\lib\LanguageExt.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.1.36.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.1.36\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -53,11 +61,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandProcessor.cs" />
+    <Compile Include="Definitions\Level.cs" />
+    <Compile Include="Definitions\Monster.cs" />
+    <Compile Include="GameActionContext.cs" />
     <Compile Include="GameEngine.cs" />
     <Compile Include="IConsole.cs" />
+    <Compile Include="IConsoleInput.cs" />
+    <Compile Include="IGameEngine.cs" />
     <Compile Include="InputLoop.cs" />
+    <Compile Include="IObjectLoader.cs" />
+    <Compile Include="IPlayerAction.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MapReader.cs" />
+    <Compile Include="MovePlayerAction.cs" />
+    <Compile Include="OpenDoorAction.cs" />
+    <Compile Include="PlayerState.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="PointExtensions.cs" />
     <Compile Include="RenderLoop.cs" />

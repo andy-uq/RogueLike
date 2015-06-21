@@ -1,11 +1,7 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using win32;
+﻿using System.Threading.Tasks;
+using RogueLike.Win32;
 
-namespace carl
+namespace RogueLike.Console
 {
 	public static class Program
 	{

@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Text.RegularExpressions;
 
-namespace carl
+namespace RogueLike
 {
 	[DebuggerDisplay("X={X}, Y={Y}, Z={Z} [{Magnitude}]")]
 	public struct Vector : IEquatable<Vector>, IFormattable

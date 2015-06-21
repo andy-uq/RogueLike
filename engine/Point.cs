@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Text.RegularExpressions;
 
-namespace carl
+namespace RogueLike
 {
 	[DebuggerDisplay("X={X}, Y={Y} [{Magnitude}]")]
 	public struct Point : IEquatable<Point>, IFormattable

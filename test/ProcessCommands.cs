@@ -1,10 +1,8 @@
-using System;
-using carl;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 
-namespace test
+namespace RogueLike.Tests
 {
 	public class ProcessCommands
 	{
@@ -14,13 +12,22 @@ namespace test
 		[TestCase(1, 1, true)]
 		public void Move(int x, int y, bool success)
 		{
-			var player = new Player(position: new Point(1, 1));
+			var origin = new Point(1, 1);
+			var player = new Player(position: origin);
 			var gameEngine = new Mock<IGameEngine>();
 			gameEngine.SetupGet(_ => _.Map).Returns(Data.Maps.Small);
 			gameEngine.SetupGet(_ => _.Player).Returns(player);
 			var cp = new CommandProcessor(gameEngine.Object);
 
-			cp.Move(x, y).Should().Be(success);
+			cp.Move(x, y);
+
+			while (cp.HasActions)
+			{
+				cp.Act();
+			}
+
+			if (success)
+				player.Position.Should().NotBe(origin);
 		}
 
 		[Test]
@@ -32,7 +39,7 @@ namespace test
 			gameEngine.SetupGet(_ => _.Player).Returns(player);
 
 			var cp = new CommandProcessor(gameEngine.Object);
-			cp.Move(0, 1).Should().BeTrue();
+			cp.Move(0, 1).IfSome(_ => _.Act(gameEngine.Object));
 
 			player.Position.X.Should().Be(1);
 			player.Position.Y.Should().Be(1);
@@ -65,6 +72,15 @@ namespace test
 			cp.Add("bleh");
 
 			status.Should().Be("Unknown command: bleh");
+		}
+	}
+
+	public static class GameExtensions
+	{
+		public static void Act(this IPlayerAction action, IGameEngine gameEngine)
+		{
+			var context = new GameActionContext(gameEngine);
+			action.Act(context);
 		}
 	}
 }
