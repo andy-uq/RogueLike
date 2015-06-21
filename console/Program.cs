@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using RogueLike.Win32;
 
 namespace RogueLike.Console
@@ -6,30 +7,41 @@ namespace RogueLike.Console
 	public static class Program
 	{
 		private static RenderLoop _renderLoop;
+		private static GameLoop _gameLoop;
 		private static InputLoop _inputLoop;
 
 		private static void Main(string[] args)
 		{
-			var game = new GameEngine
+			var engine = new GameEngine
 			{
 				IsActive = true,
 				CommandLine = "",
 				ObjectLoader = new ObjectLoader(),
-				Player = new Player(position: new Point(x: 1, y: 7)),
+				SaveGameStore = new SaveGameStore(),
+				Player = new Player()
 			};
 
-			var reader = new MapReader(game);
-			game.Map = reader.LoadLevel("level01.txt");
-			game.CommandProcessor = new CommandProcessor(game);
-			game.Map.InitialiseLevel(game.Player);
+			engine.CommandProcessor = new CommandProcessor(engine);
 
-			_renderLoop = new RenderLoop(game, new RawConsole());
-			_inputLoop = new InputLoop(game, new RawConsole());
+			var reader = new MapReader(engine);
+			engine.Map = reader.LoadLevel("level01.txt");
+
+			var playerState = engine.SaveGameStore.Load();
+			playerState.Match(
+					state => engine.Player = new Player(state),
+					() => engine.Map.InitialiseLevel(engine.Player));
+
+			_renderLoop = new RenderLoop(engine, new RawConsole());
+			_inputLoop = new InputLoop(engine, new RawConsole());
+			_gameLoop = new GameLoop(engine);
 
 			var render = Task.Run(() => _renderLoop.RenderLoopAsync());
+			var game = Task.Run(() => _gameLoop.GameLoopAsync());
 			var input = Task.Run(() => _inputLoop.InputLoopAsync());
 
-			Task.WaitAll(input, render);
+			var task = Task.WhenAny(input, render, game);
+			var awaiter = task.GetAwaiter();
+			awaiter.GetResult();
 		}
 	}
 }

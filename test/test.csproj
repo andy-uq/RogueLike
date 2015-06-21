@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data.cs" />
+    <Compile Include="GameActions.cs" />
     <Compile Include="Inventory.cs" />
     <Compile Include="Maps.cs" />
     <Compile Include="ProcessCommands.cs" />

@@ -17,7 +17,7 @@ namespace RogueLike
 
 		public Player(PlayerState state)
 		{
-			Position = state.Position;
+			Position = new Point(state.Position.X, state.Position.Y);
 			_inventory = state.Inventory;
 		}
 
@@ -39,6 +39,15 @@ namespace RogueLike
 			return _inventory.Remove(item) 
 				? Some(item) 
 				: None;
+		}
+
+		public PlayerState Save()
+		{
+			return new PlayerState
+			{
+				Inventory = _inventory,
+				Position = new PointXY {X = Position.X, Y = Position.Y}
+			};
 		}
 	}
 

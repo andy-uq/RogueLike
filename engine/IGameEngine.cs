@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using LanguageExt;
+using Nito.AsyncEx;
+
 namespace RogueLike
 {
 	public interface IGameEngine
@@ -7,5 +11,12 @@ namespace RogueLike
 		Map Map { get; }
 		Player Player { get; }
 		IObjectLoader ObjectLoader { get; }
+
+		bool IsActive { get; }
+
+		Task<Option<IPlayerAction>> EnqueueActionAsync(IPlayerAction action);
+      Task<IPlayerAction> TakeNextActionAsync();
+
+		void Save();
 	}
 }

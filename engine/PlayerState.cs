@@ -4,7 +4,13 @@ namespace RogueLike
 {
 	public class PlayerState
 	{
-		public Point Position { get; private set; }
+		public PointXY Position { get; set; }
 		public List<PlayerItem> Inventory { get; set; }
+	}
+
+	public struct PointXY
+	{
+		public int X { get; set; }
+		public int Y { get; set; }
 	}
 }

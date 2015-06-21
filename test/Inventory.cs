@@ -42,7 +42,7 @@ namespace RogueLike.Tests
 		public void CanDropItem()
 		{
 			var item = new PlayerItem();
-			var state = new PlayerState() {Inventory = new List<PlayerItem>() {item}};
+			var state = new PlayerState {Inventory = new List<PlayerItem>() {item}};
 
 			var player = new Player(state);
 			var droppedItem = player.DropItem(item);

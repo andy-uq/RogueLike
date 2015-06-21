@@ -34,10 +34,10 @@ namespace RogueLike.Tests
 			{
 				var height = data.Length;
 
-				var tiles = new Tile[height, data.Max(d => d.Length)];
+				var tiles = new Tile[data.Max(d => d.Length), height];
 				for (var y = 0; y < height; y++)
 					for (var x = 0; x < data[y].Length; x++)
-						tiles[y, x] = data[y][x].ToTile();
+						tiles[x, y] = data[y][x].ToTile();
 
 				return new Map(tiles, default(Point), Enumerable.Empty<Mobile>());
 			}

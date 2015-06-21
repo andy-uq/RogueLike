@@ -1,4 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
+using LanguageExt;
+using static LanguageExt.Prelude;
 using Moq;
 using NUnit.Framework;
 
@@ -10,41 +16,54 @@ namespace RogueLike.Tests
 		[TestCase(-1, 0, false)]
 		[TestCase(0, -1, false)]
 		[TestCase(1, 1, true)]
-		public void Move(int x, int y, bool success)
+		public async Task Move(int x, int y, bool success)
 		{
 			var origin = new Point(1, 1);
 			var player = new Player(position: origin);
-			var gameEngine = new Mock<IGameEngine>();
+			var actionQueue = new Queue<IPlayerAction>();
+
+			var gameEngine = new Mock<IGameEngine>(MockBehavior.Strict);
 			gameEngine.SetupGet(_ => _.Map).Returns(Data.Maps.Small);
 			gameEngine.SetupGet(_ => _.Player).Returns(player);
+			gameEngine.Setup(_ => _.EnqueueActionAsync(It.IsAny<IPlayerAction>()))
+				.Returns<IPlayerAction>(action => Task.FromResult(Some(action)))
+				.Callback<IPlayerAction>(action => actionQueue.Enqueue(action));
+			
 			var cp = new CommandProcessor(gameEngine.Object);
-
-			cp.Move(x, y);
-
-			while (cp.HasActions)
-			{
-				cp.Act();
-			}
+			var move = await cp.Move(x, y);
 
 			if (success)
-				player.Position.Should().NotBe(origin);
+			{
+				move.Match(
+					m => m.Should().BeOfType<MovePlayerAction>(),
+					() => { throw new InvalidOperationException(); });
+			}
+			else
+			{
+				move.Some(m => m.Should().BeNull());
+			}
 		}
 
 		[Test]
-		public void OpenDoor()
+		public async Task OpenDoor()
 		{
 			var player = new Player(position: new Point(1, 1));
+			var actionQueue = new Queue<IPlayerAction>();
+			var map = Data.Maps.HasDoor();
+
 			var gameEngine = new Mock<IGameEngine>();
-			gameEngine.SetupGet(_ => _.Map).Returns(Data.Maps.HasDoor());
+			gameEngine.SetupGet(_ => _.Map).Returns(map);
 			gameEngine.SetupGet(_ => _.Player).Returns(player);
+			gameEngine.Setup(_ => _.EnqueueActionAsync(It.IsAny<IPlayerAction>()))
+				.Returns<IPlayerAction>(action => Task.FromResult(Some(action)))
+				.Callback<IPlayerAction>(action => actionQueue.Enqueue(action));
 
 			var cp = new CommandProcessor(gameEngine.Object);
-			cp.Move(0, 1).IfSome(_ => _.Act(gameEngine.Object));
+			var move = await cp.Move(1, 0);
 
-			player.Position.X.Should().Be(1);
-			player.Position.Y.Should().Be(1);
-
-			gameEngine.Object.Map[1, 2].Should().Be(Tiles.OpenDoor);
+			move.Match(
+				m => m.Should().BeOfType<OpenDoorAction>(),
+				() => { throw new InvalidOperationException(); });
 		}
 
 		[Test]
@@ -72,15 +91,6 @@ namespace RogueLike.Tests
 			cp.Add("bleh");
 
 			status.Should().Be("Unknown command: bleh");
-		}
-	}
-
-	public static class GameExtensions
-	{
-		public static void Act(this IPlayerAction action, IGameEngine gameEngine)
-		{
-			var context = new GameActionContext(gameEngine);
-			action.Act(context);
 		}
 	}
 }
