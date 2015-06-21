@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace RogueLike
 {
@@ -13,7 +14,7 @@ namespace RogueLike
 			_consoleInput = consoleInput;
 		}
 
-		public void InputLoopAsync()
+		public async Task InputLoopAsync()
 		{
 			var commandBuffer = new char[80];
 			var extendedCommand = false;
@@ -65,19 +66,19 @@ namespace RogueLike
 						break;
 
 					case ConsoleKey.UpArrow:
-						_game.CommandProcessor.Move(yDelta: -1);
+						await _game.CommandProcessor.Move(yDelta: -1);
 						break;
 
 					case ConsoleKey.DownArrow:
-						_game.CommandProcessor.Move(yDelta: 1);
+						await _game.CommandProcessor.Move(yDelta: 1);
 						break;
 
 					case ConsoleKey.LeftArrow:
-						_game.CommandProcessor.Move(xDelta: -1);
+						await _game.CommandProcessor.Move(xDelta: -1);
 						break;
 
 					case ConsoleKey.RightArrow:
-						_game.CommandProcessor.Move(xDelta: +1);
+						await _game.CommandProcessor.Move(xDelta: +1);
 						break;
 				}
 			}

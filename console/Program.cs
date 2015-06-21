@@ -39,7 +39,7 @@ namespace RogueLike.Console
 			var game = Task.Run(() => _gameLoop.GameLoopAsync());
 			var input = Task.Run(() => _inputLoop.InputLoopAsync());
 
-			var task = Task.WhenAny(input, render, game);
+			var task = Task.WhenAll(input, render, game);
 			var awaiter = task.GetAwaiter();
 			awaiter.GetResult();
 		}
