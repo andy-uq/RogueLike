@@ -52,11 +52,8 @@ namespace RogueLike
 			Console.Write(Position.CommandLine, Game.CommandLine);
 			Console.SetCursorPosition(Position.CommandLine.OffsetX(Game.CommandLine.Length));
 
-			if (Game.StatusTtl > 0)
-			{
-				Game.StatusTtl--;
-				Console.Write(Position.StatusLine, Game.StatusLine, ConsoleColor.DarkRed);
-			}
+			var status = Game.GetStatusLine();
+			status.IfSome(s => Console.Write(Position.StatusLine, s, ConsoleColor.DarkRed));
 
 			_frame++;
 			UpdateFps(frameTimer);

@@ -54,6 +54,17 @@ namespace RogueLike
 			StatusLine = string.Format(format, args);
 			StatusTtl = 60;
 		}
+
+		public Option<string> GetStatusLine()
+		{
+			if (StatusTtl > 0)
+			{
+				StatusTtl--;
+				return Some(StatusLine);
+			}
+
+			return None;
+		}
 	}
 
 	public interface ISaveGameStore
