@@ -56,12 +56,8 @@ namespace RogueLike
 
 		#region IEquatable<Point> Members
 
-		public bool Equals(Point obj)
-		{
-			return 
-				Equals(obj.X, X) 
-				&& Equals(obj.Y, Y);
-		}
+		public bool Equals(Point obj) => Equals(obj.X, X) && Equals(obj.Y, Y);
+		public bool Equals(PointXY obj) => Equals(obj.X, X) && Equals(obj.Y, Y);
 
 		#endregion
 
@@ -101,10 +97,10 @@ namespace RogueLike
 
 		public override bool Equals(object obj)
 		{
-			if (obj.GetType() != typeof (Point))
-				return false;
+			if (obj is PointXY)
+				return Equals((PointXY) obj);
 
-			return Equals((Point) obj);
+			return obj is Point && Equals((Point) obj);
 		}
 
 		public override int GetHashCode()
@@ -130,37 +126,22 @@ namespace RogueLike
 			throw new FormatException("Unable to parse Point: " + value);
 		}
 
-		public override string ToString()
-		{
-			return ToString("g");
-		}
+		public override string ToString() => ToString("g");
 
-		public static bool operator ==(Point left, Point right)
-		{
-			return left.Equals(right);
-		}
-
-		public static bool operator !=(Point left, Point right)
-		{
-			return !left.Equals(right);
-		}
+		public static bool operator ==(Point left, Point right) => left.Equals(right);
+		public static bool operator !=(Point left, Point right) => !left.Equals(right);
+		public static bool operator ==(Point left, PointXY right) => left.Equals(right);
+		public static bool operator !=(Point left, PointXY right) => !left.Equals(right);
+		public static bool operator ==(PointXY left, Point right) => right.Equals(left);
+		public static bool operator !=(PointXY left, Point right) => !right.Equals(left);
 
 		[Pure]
-		public static implicit operator Vector(Point p)
-		{
-			return new Vector(p.X, p.Y);
-		}
+		public static implicit operator Vector(Point p) => new Vector(p.X, p.Y);
 
 		[Pure]
-		public static Point operator +(Point a, Point b)
-		{
-			return new Point(a.X + b.X, a.Y + b.Y);
-		}
+		public static Point operator +(Point a, Point b) => new Point(a.X + b.X, a.Y + b.Y);
 
 		[Pure]
-		public static Point operator -(Point a, Point b)
-		{
-			return new Point(a.X - b.X, a.Y - b.Y);
-		}
+		public static Point operator -(Point a, Point b) => new Point(a.X - b.X, a.Y - b.Y);
 	}
 }

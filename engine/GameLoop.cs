@@ -14,6 +14,8 @@ namespace RogueLike
 
 		public async Task GameLoopAsync()
 		{
+			Game.Load();
+
 			while (Game.IsActive)
 			{
 				var context = new GameActionContext(Game);

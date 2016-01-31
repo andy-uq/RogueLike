@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 
 namespace RogueLike.Tests
@@ -12,11 +11,13 @@ namespace RogueLike.Tests
 			var origin = new Point(1, 1);
 			var player = new Player(position: origin);
 
-			var gameEngine = new Mock<IGameEngine>(MockBehavior.Strict);
-			gameEngine.SetupGet(_ => _.Map).Returns(Data.Maps.Small);
-			gameEngine.SetupGet(_ => _.Player).Returns(player);
+			var gameEngine = new GameEngine()
+			{
+				Player = player,
+				Map = Data.Maps.Small()
+			};
 
-			var context = new GameActionContext(gameEngine.Object);
+			var context = new GameActionContext(gameEngine);
 			var action = new MovePlayerAction(new Point(2, 1));
 			action.Act(context);
 
@@ -30,11 +31,13 @@ namespace RogueLike.Tests
 			var player = new Player(position: new Point(1, 1));
 			var map = Data.Maps.HasDoor();
 
-			var gameEngine = new Mock<IGameEngine>();
-			gameEngine.SetupGet(_ => _.Map).Returns(map);
-			gameEngine.SetupGet(_ => _.Player).Returns(player);
+			var gameEngine = new GameEngine()
+			{
+				Player = player,
+				Map = map
+			};
 
-			var context = new GameActionContext(gameEngine.Object);
+			var context = new GameActionContext(gameEngine);
 			var action = new OpenDoorAction(new Point(1, 2));
 			action.Act(context);
 

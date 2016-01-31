@@ -97,6 +97,7 @@
     <Compile Include="InputLoop.cs" />
     <Compile Include="IObjectLoader.cs" />
     <Compile Include="IPlayerAction.cs" />
+    <Compile Include="ISaveGameStore.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MapReader.cs" />
     <Compile Include="MovePlayerAction.cs" />

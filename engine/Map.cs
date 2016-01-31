@@ -21,7 +21,18 @@ namespace RogueLike
 		public Point StartingPosition { get; private set; }
 
 		public Tile this[int x, int y] => _tiles[x, y];
-		public Tile this[Point point] => _tiles[point.X, point.Y];
+
+		public Tile this[Point point]
+		{
+			get { return _tiles[point.X, point.Y]; }
+			private set { _tiles[point.X, point.Y] = value; }
+		}
+
+		private Tile this[PointXY point]
+		{
+			get { return _tiles[point.X, point.Y]; }
+			set { _tiles[point.X, point.Y] = value; }
+		}
 
 		public IEnumerable<Mobile> Mobiles => _mobs;
 
@@ -32,21 +43,17 @@ namespace RogueLike
 
 		public bool IsOccupied(Point point)
 		{
-			if (point.X < 0 || point.Y < 0)
+			if (point.X < 0 || point.Y < 0
+			    || point.X >= Dimensions.X || point.Y >= Dimensions.Y)
 				return true;
 
-			if (point.X < Dimensions.X && point.Y < Dimensions.Y)
-			{
-				var tile = this[point];
-				return tile == Tiles.Wall || tile == Tiles.ClosedDoor;
-			}
-
-			return true;
+			var tile = this[point];
+			return tile == Tiles.Wall || tile == Tiles.ClosedDoor;
 		}
 
 		public bool OpenDoor(Point point)
 		{
-			_tiles[point.X, point.Y] = Tiles.OpenDoor;
+			this[point] = Tiles.OpenDoor;
 			return true;
 		}
 
@@ -59,6 +66,44 @@ namespace RogueLike
 		private Mobile GetMobile(Point point)
 		{
 			return Mobiles.FirstOrDefault(m => m.Position == point);
+		}
+
+		public MapState Save()
+		{
+			return new MapState
+			{
+				Tiles = SaveTiles().ToList(),
+				Mobiles = Mobiles.Select(mob => mob.Save()).ToList()
+			};
+		}
+
+		public void Load(MapState state)
+		{
+			foreach (var tile in state.Tiles)
+			{
+				this[tile.Coordinates] = this[tile.Coordinates].Load(tile);
+			}
+
+			foreach (var mob in state.Mobiles)
+			{
+				_mobs[mob.Id].Load(mob);
+			}
+		}
+
+		private IEnumerable<TileState> SaveTiles()
+		{
+			for (var y = 0; y < Dimensions.Y; y++)
+			{
+				for (var x = 0; x < Dimensions.X; x++)
+				{
+					var state = _tiles[x, y].Save();
+					if (state == null)
+						continue;
+
+					state.Coordinates = new PointXY {X = x, Y = y};
+					yield return state;
+				}
+			}
 		}
 	}
 }

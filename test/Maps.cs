@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using RogueLike.Definitions;
 
@@ -27,32 +27,81 @@ namespace RogueLike.Tests
 		[Test]
 		public void CanCreateMapReader()
 		{
-			CreateReader(Mock.Of<IGameEngine>());
-		}
-
-		private static MapReader CreateReader(IGameEngine gameEngine)
-		{
-			return new MapReader(gameEngine);
+			var objectLoader = new TestObjectLoader();
+			new MapReader(objectLoader);
 		}
 
 		[Test]
 		public void LoadLevel()
 		{
-			var objectLoader = new Mock<IObjectLoader>(MockBehavior.Strict);
-			objectLoader.Setup(x => x.Load<Level>("name")).Returns(Data.Level);
-			objectLoader.Setup(x => x.LoadAll<Monster>("monsters")).Returns(Data.Monsters);
-			objectLoader.Setup(x => x.LoadTiles("map")).Returns(Data.Tiles.Small);
+			var objectLoader = new TestObjectLoader();
 
-			var gameEngine = new Mock<IGameEngine>(MockBehavior.Strict);
-			gameEngine.SetupGet(x => x.ObjectLoader).Returns(objectLoader.Object);
-
-			var reader = CreateReader(gameEngine.Object);
+			var reader = new MapReader(objectLoader);
 			var level = reader.LoadLevel("name");
 
 			level.Dimensions.X.Should().Be(4);
 			level.Dimensions.Y.Should().Be(4);
 		}
 
+		[Test]
+		public void SaveMap()
+		{
+			var small = Data.Maps.Small().Save();
+			small.Tiles.Should().BeEmpty();
+
+			var door = Data.Maps.HasDoor().Save();
+			door.Tiles.Should().BeEmpty();
+
+			var map = Data.Maps.HasDoor();
+			map.OpenDoor(Data.Maps.DoorLocation).Should().BeTrue();
+			map[Data.Maps.DoorLocation].Should().Be(Tiles.OpenDoor);
+
+			var openDoorTiles = map.Save();
+			openDoorTiles.Tiles.Should().NotBeEmpty();
+			var openDoor = openDoorTiles.Tiles.Single();
+			openDoor.Coordinates.X.Should().Be(Data.Maps.DoorLocation.X);
+			openDoor.Coordinates.Y.Should().Be(Data.Maps.DoorLocation.Y);
+		}
+
+		[Test]
+		public void LoadMap()
+		{
+			var map = Data.Maps.HasDoor();
+
+			map.Load(new MapState());
+			map[Data.Maps.DoorLocation].Should().Be(Tiles.ClosedDoor);
+
+			map.Load(new MapState { Tiles = { new DoorTileState { Coordinates = new PointXY { X = Data.Maps.DoorLocation.X, Y = Data.Maps.DoorLocation.Y }, IsOpen = true } } });
+			map[Data.Maps.DoorLocation].Should().Be(Tiles.OpenDoor);
+
+			map = Data.Maps.HasMob();
+
+			map.Load(new MapState());
+			map.Mobiles.SingleOrDefault(m => m.Position == Data.Maps.MobLocation).Should().NotBeNull();
+
+			PointXY updatedLocation = new PointXY() { X = 1, Y = 1 };
+			map.Load(new MapState { Mobiles = { new MobileState() { Id = 0, Position = updatedLocation } }});
+			map.Mobiles.SingleOrDefault(m => m.Position == Data.Maps.MobLocation).Should().BeNull();
+			map.Mobiles.SingleOrDefault(m => m.Position == updatedLocation).Should().NotBeNull();
+		}
+
+		private class TestObjectLoader : IObjectLoader
+		{
+			public T Load<T>(string name)
+			{
+				return (T) (object) Data.Level;
+			}
+
+			public List<T> LoadAll<T>(string name)
+			{
+				return (List<T>) (object) Data.Monsters;
+			}
+
+			public char[][] LoadTiles(string mapName)
+			{
+				return Data.Tiles.Small;
+			}
+		}
 	}
 
 	static class EnumerableExtensions

@@ -17,6 +17,7 @@ namespace RogueLike
 		Task<Option<IPlayerAction>> EnqueueActionAsync(IPlayerAction action);
       Task<IPlayerAction> TakeNextActionAsync();
 
+		void Load();
 		void Save();
 	}
 }

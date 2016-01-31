@@ -8,23 +8,23 @@ namespace RogueLike
 {
 	public class MapReader
 	{
-		private readonly IGameEngine _gameEngine;
 		private readonly List<Mobile> _mobs;
 		private List<Monster> _monsterDefinitions;
 		private Point _startingPosition;
+		private readonly IObjectLoader _objectLoader;
 
-		public MapReader(IGameEngine gameEngine)
+		public MapReader(IObjectLoader objectLoader)
 		{
-			_gameEngine = gameEngine;
 			_mobs = new List<Mobile>();
+			_objectLoader = objectLoader;
 		}
 
 		public Map LoadLevel(string name)
 		{
-			var level = _gameEngine.ObjectLoader.Load<Definitions.Level>(name);
+			var level = _objectLoader.Load<Definitions.Level>(name);
 
-			_monsterDefinitions = _gameEngine.ObjectLoader.LoadAll<Definitions.Monster>(level.Monsters);
-			var tileData = _gameEngine.ObjectLoader.LoadTiles(level.Map);
+			_monsterDefinitions = _objectLoader.LoadAll<Definitions.Monster>(level.Monsters);
+			var tileData = _objectLoader.LoadTiles(level.Map);
 
 			var tiles = LoadTiles(tileData);
 			return new Map(tiles, _startingPosition, _mobs);
@@ -34,7 +34,7 @@ namespace RogueLike
 		{
 			var tiles = new Tile[tileData.Max(l => l.Length), tileData.Length];
 
-			int y = 0, monsterId = 1;
+			int y = 0, monsterId = 0;
 			foreach (var line in tileData)
 			{
 				for (var x = 0; x < line.Length; x++)
@@ -62,7 +62,7 @@ namespace RogueLike
 		private Mobile FromMonster(int monsterId, Point position)
 		{
 			var monster = _monsterDefinitions.SingleOrDefault(m => m.Id == monsterId) ?? _monsterDefinitions.First();
-			return new Mobile(position) { Glyph = Convert.ToChar(monster.Glyph) };
+			return new Mobile(monsterId, position) { Glyph = Convert.ToChar(monster.Glyph) };
 		}
 	}
 }

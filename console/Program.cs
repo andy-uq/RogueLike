@@ -23,10 +23,10 @@ namespace RogueLike.Console
 
 			engine.CommandProcessor = new CommandProcessor(engine);
 
-			var reader = new MapReader(engine);
+			var reader = new MapReader(engine.ObjectLoader);
 			engine.Map = reader.LoadLevel("level01.txt");
 
-			var playerState = engine.SaveGameStore.Load();
+			var playerState = engine.SaveGameStore.LoadPlayer();
 			playerState.Match(
 					state => engine.Player = new Player(state),
 					() => engine.Map.InitialiseLevel(engine.Player));

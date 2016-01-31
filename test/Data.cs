@@ -27,10 +27,15 @@ namespace RogueLike.Tests
 
 		public static class Maps
 		{
+			public readonly static Func<Map> HasMob = () => ToMap(Tiles.HasDoor, new[] { new Mobile(0, MobLocation) });
+			public static Point MobLocation => new Point(3, 1);
+
 			public readonly static Func<Map> HasDoor = () => ToMap(Tiles.HasDoor);
+			public static Point DoorLocation => new Point(2, 1);
+
 			public readonly static Func<Map> Small = () => ToMap(Tiles.Small);
 
-			private static Map ToMap(char[][] data)
+			private static Map ToMap(char[][] data, IEnumerable<Mobile> mobiles = null)
 			{
 				var height = data.Length;
 
@@ -39,7 +44,7 @@ namespace RogueLike.Tests
 					for (var x = 0; x < data[y].Length; x++)
 						tiles[x, y] = data[y][x].ToTile();
 
-				return new Map(tiles, default(Point), Enumerable.Empty<Mobile>());
+				return new Map(tiles, default(Point), mobiles ?? Enumerable.Empty<Mobile>());
 			}
 		}
 

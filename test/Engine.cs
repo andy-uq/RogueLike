@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using LanguageExt;
 using NUnit.Framework;
+
+using static LanguageExt.Prelude;
 
 namespace RogueLike.Tests
 {
@@ -59,6 +59,9 @@ namespace RogueLike.Tests
 		{
 			var engine = MakeEngine();
 			var ended = false;
+
+			engine.IsActive.Should().BeTrue();
+
 			var t = Task.Run(async () =>
 			{
 				while (engine.IsActive)
@@ -76,9 +79,76 @@ namespace RogueLike.Tests
 			ended.Should().BeTrue();
 		}
 
+		[Test]
+		public void SaveGame()
+		{
+			var store = new TestSaveGameStore();
+
+			var engine = MakeEngine();
+			engine.SaveGameStore = store;
+			engine.Map = Data.Maps.Small();
+			engine.Player = new Player() { Position = new Point(1, 2) };
+			engine.Save();
+
+			store.Player.Position.X.Should().Be(engine.Player.Position.X);
+			store.Player.Position.Y.Should().Be(engine.Player.Position.Y);
+			store.Map.Tiles.Should().BeEmpty();
+		}
+
+		[Test]
+		public void LoadGame()
+		{
+			var store = new TestSaveGameStore();
+
+			var engine = MakeEngine();
+			engine.Map = Data.Maps.Small();
+			engine.SaveGameStore = store;
+
+			engine.Load();
+
+			engine.Player.Position.X.Should().Be(store.Player.Position.X);
+			engine.Player.Position.Y.Should().Be(store.Player.Position.Y);
+			engine.Map.Should().NotBeNull();
+		}
+
 		private static GameEngine MakeEngine()
 		{
-			return new GameEngine();
+			return new GameEngine { IsActive = true };
+		}
+	}
+
+	internal class TestSaveGameStore : ISaveGameStore
+	{
+		private Option<PlayerState> _player;
+		private Option<MapState> _map;
+
+		public TestSaveGameStore(Option<PlayerState> player = default(Option<PlayerState>))
+		{
+			_player = player;
+			_map = None;
+		}
+
+		public PlayerState Player => _player.IfNone(new PlayerState());
+		public MapState Map => _map.IfNone(new MapState());
+
+		public Option<PlayerState> LoadPlayer()
+		{
+			return Player;
+		}
+
+		public Option<MapState> LoadMap()
+		{
+			return Map;
+		}
+
+		public void Save(PlayerState player)
+		{
+			_player = player;
+		}
+
+		public void Save(MapState map)
+		{
+			_map = map;
 		}
 	}
 }

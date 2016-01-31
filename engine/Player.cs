@@ -49,22 +49,46 @@ namespace RogueLike
 				Position = new PointXY {X = Position.X, Y = Position.Y}
 			};
 		}
-	}
 
-	
+		public void Load(PlayerState state)
+		{
+			Position = new Point(state.Position.X, state.Position.Y);			
+		}
+	}
 
 	public class PlayerItem
 	{
 	}
 
+	public class MapItem { }
+
 	public class Mobile
 	{
-		public Mobile(Point position)
+		public Mobile(int id, Point position)
 		{
+			Id = id;
 			Position = position;
 		}
 
+		public int Id { get; }
 		public Point Position { get; set; }
 		public char Glyph { get; set; }
+
+		public void Load(MobileState state)
+		{
+			if (Id != state.Id)
+				return;
+
+			Position = new Point(state.Position.X, state.Position.Y);
+		}
+
+		public MobileState Save()
+		{
+			return new MobileState
+			{
+				Id = Id,
+				Position = new PointXY {X = Position.X, Y = Position.Y}
+			};
+		}
 	}
 }
