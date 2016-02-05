@@ -11,7 +11,8 @@ namespace RogueLike.Win32
 		{
 			if (File.Exists("player.txt"))
 			{
-				var json = File.ReadAllText("mapstate.txt");
+				var path = Path.Combine("data/save", "mapstate.txt");
+				var json = File.ReadAllText(path);
 				var map = Deserialise<MapState>(json);
 				return Some(map);
 			}
@@ -21,21 +22,24 @@ namespace RogueLike.Win32
 
 		public void Save(MapState map)
 		{
+			var path = Path.Combine("data/save", "mapstate.txt");
 			var json = Serialise(map);
-			File.WriteAllText("mapstate.txt", json);
+			File.WriteAllText(path, json);
 		}
 
 		public void Save(PlayerState player)
 		{
+			var path = Path.Combine("data/save", "player.txt");
 			var json = Serialise(player);
-			File.WriteAllText("player.txt", json);
+			File.WriteAllText(path, json);
 		}
 
 		public Option<PlayerState> LoadPlayer()
 		{
-			if (File.Exists("player.txt"))
+			var path = Path.Combine("data/save", "player.txt");
+			if (File.Exists(path))
 			{
-				var json = File.ReadAllText("player.txt");
+				var json = File.ReadAllText(path);
 				var player = Deserialise<PlayerState>(json);
 				return Some(player);
 			}
