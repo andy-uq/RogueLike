@@ -24,6 +24,9 @@ namespace RogueLike
 					var action = await Game.TakeNextActionAsync();
 					action.Act(context);
 
+					foreach (var mobile in Game.Map.Mobiles)
+						mobile.Act(context);
+					
 					Game.Save();
 				}
 				catch (InvalidOperationException)

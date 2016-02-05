@@ -70,6 +70,7 @@
     <Compile Include="GameActions.cs" />
     <Compile Include="Inventory.cs" />
     <Compile Include="Maps.cs" />
+    <Compile Include="Mobiles.cs" />
     <Compile Include="ProcessCommands.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SavePlayer.cs" />

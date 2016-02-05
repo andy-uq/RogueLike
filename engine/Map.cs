@@ -36,9 +36,13 @@ namespace RogueLike
 
 		public IEnumerable<Mobile> Mobiles => _mobs;
 
+		public bool CanSee(Point source, Point target) => new VisibilityCheck(_tiles).CanSee(source, target);
+
 		public void InitialiseLevel(Player player)
 		{
 			player.Position = StartingPosition;
+			foreach (var mob in _mobs)
+				mob.Home = mob.Position;
 		}
 
 		public bool IsOccupied(Point point)
@@ -105,5 +109,6 @@ namespace RogueLike
 				}
 			}
 		}
+
 	}
 }

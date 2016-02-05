@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using LanguageExt;
 using Nito.AsyncEx;
@@ -14,7 +15,7 @@ namespace RogueLike
 
 		bool IsActive { get; }
 
-		Task<Option<IPlayerAction>> EnqueueActionAsync(IPlayerAction action);
+		Task<IPlayerAction> EnqueueActionAsync(IPlayerAction action);
       Task<IPlayerAction> TakeNextActionAsync();
 
 		void Load();

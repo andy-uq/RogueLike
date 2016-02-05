@@ -9,9 +9,9 @@ namespace RogueLike
 	{
 		private readonly List<PlayerItem> _inventory;
 
-		public Player(Point position = default(Point))
+		public Player(Point? position = null)
 		{
-			Position = position;
+			Position = position ?? new Point(-1, -1);
 			_inventory = new List<PlayerItem>(CarryingCapacity);
 		}
 
@@ -61,34 +61,4 @@ namespace RogueLike
 	}
 
 	public class MapItem { }
-
-	public class Mobile
-	{
-		public Mobile(int id, Point position)
-		{
-			Id = id;
-			Position = position;
-		}
-
-		public int Id { get; }
-		public Point Position { get; set; }
-		public char Glyph { get; set; }
-
-		public void Load(MobileState state)
-		{
-			if (Id != state.Id)
-				return;
-
-			Position = new Point(state.Position.X, state.Position.Y);
-		}
-
-		public MobileState Save()
-		{
-			return new MobileState
-			{
-				Id = Id,
-				Position = new PointXY {X = Position.X, Y = Position.Y}
-			};
-		}
-	}
 }

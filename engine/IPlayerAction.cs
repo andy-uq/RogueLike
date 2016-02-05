@@ -4,4 +4,9 @@ namespace RogueLike
 	{
 		void Act(GameActionContext context);
 	}
+
+	public interface IMonsterAction
+	{
+		void Act(GameActionContext context);
+	}
 }

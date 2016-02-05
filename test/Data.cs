@@ -23,11 +23,18 @@ namespace RogueLike.Tests
 				new[] {'#', ' ', '/', ' ', '#',},
 				new[] {'#', '#', '#', '#', '#',},
 			};
+
+			public static readonly char[][] HasMob =
+			{
+				new[] {'#', '#', '#', '#', '#',},
+				new[] {'#', ' ', '=', ' ', '#',},
+				new[] {'#', '#', '#', '#', '#',},
+			};
 		}
 
 		public static class Maps
 		{
-			public readonly static Func<Map> HasMob = () => ToMap(Tiles.HasDoor, new[] { new Mobile(0, MobLocation) });
+			public readonly static Func<Map> HasMob = () => ToMap(Tiles.HasMob, new[] { new Mobile(0, MobLocation) });
 			public static Point MobLocation => new Point(3, 1);
 
 			public readonly static Func<Map> HasDoor = () => ToMap(Tiles.HasDoor);

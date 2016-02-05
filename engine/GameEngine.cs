@@ -1,4 +1,6 @@
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using LanguageExt;
 using Nito.AsyncEx;
@@ -47,10 +49,10 @@ namespace RogueLike
 			SaveGameStore.LoadMap().IfSome(Map.Load);
 		}
 
-		public async Task<Option<IPlayerAction>> EnqueueActionAsync(IPlayerAction action)
+		public async Task<IPlayerAction> EnqueueActionAsync(IPlayerAction action)
 		{
 			await _actionQueue.AddAsync(action);
-			return Some(action);
+			return action;
 		}
 
 		public void EndGame()

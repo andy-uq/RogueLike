@@ -28,27 +28,27 @@ namespace RogueLike
 			_game.SetStatus("Unknown command: {0}", command);
 		}
 
-		public Task<Option<IPlayerAction>> Move(int xDelta = 0, int yDelta = 0)
+		public async Task<Option<IPlayerAction>> Move(int xDelta = 0, int yDelta = 0)
 		{
 			var position = Player.Position.Add(xDelta, yDelta);
 			if (_game.Map.IsOccupied(position))
 			{
-				return BumpAsync(position);
+				return await BumpAsync(position);
 			}
 
 			var movePlayer = new MovePlayerAction(position);
-			return _game.EnqueueActionAsync(movePlayer);		
+			return Some(await _game.EnqueueActionAsync(movePlayer));
 		}
 
-		private Task<Option<IPlayerAction>> BumpAsync(Point point)
+		private async Task<Option<IPlayerAction>> BumpAsync(Point point)
 		{
 			var tile = _game.Map[point];
 			if (tile == Tiles.ClosedDoor)
 			{
-				return _game.EnqueueActionAsync(new OpenDoorAction(point));
+				return Some(await _game.EnqueueActionAsync(new OpenDoorAction(point)));
 			}
 
-			return Task.FromResult<Option<IPlayerAction>>(None);
+			return None;
 		}
 	}
 }
