@@ -1,37 +1,60 @@
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using LanguageExt;
-using Nito.AsyncEx;
-using static LanguageExt.Prelude;
 
 namespace RogueLike
 {
 	public class GameEngine : IGameEngine
 	{
-		private readonly AsyncCollection<IPlayerAction> _actionQueue;
+		private readonly ConcurrentQueue<IPlayerAction> _actionQueue;
+		private TaskCompletionSource<bool> _actionAvailable;
 
-		public GameEngine()
+		public GameEngine(ISaveGameStore saveGameStore)
 		{
-			_actionQueue = new AsyncCollection<IPlayerAction>(new ConcurrentQueue<IPlayerAction>(), 10);
+			_actionQueue = new ConcurrentQueue<IPlayerAction>();
+			_actionAvailable = new TaskCompletionSource<bool>();
+
+			SaveGameStore = saveGameStore;
 			CommandLine = string.Empty;
+			StatusLine = null;
 			Player = new Player();
+			Map = Map.Empty;
+
+			IsActive = true;
 		}
 
-		public string CommandLine { get; set; }
-		public string StatusLine { get; private set; }
-		public int StatusTtl { get; private set; }
-		public Player Player { get; set; }
-		public CommandProcessor CommandProcessor { get; set; }
-		public IObjectLoader ObjectLoader { get; set; }
-		public ISaveGameStore SaveGameStore { get; set; }
-      public Map Map { get; set; }
-		public bool IsActive { get; set; }
+		public ISaveGameStore SaveGameStore { get; }
 
-		public Task<IPlayerAction> TakeNextActionAsync()
+		public string? StatusLine { get; private set; }
+		public int StatusTtl { get; private set; }
+
+		public string CommandLine { get; set; }
+		public Player Player { get; set; }
+		public Map Map { get; set; }
+		
+		public bool IsActive { get; private set; }
+
+		public async Task<bool> TakeNextActionAsync(GameActionContext context)
 		{
-			return _actionQueue.TakeAsync();
+			if (!_actionQueue.TryDequeue(out var action))
+			{
+				var finished = await _actionAvailable.Task;
+				if (finished)
+				{
+					return true;
+				}
+			}
+
+			if (_actionQueue.IsEmpty)
+			{
+				_actionAvailable = new TaskCompletionSource<bool>(false);
+			}
+
+			action.Act(context);
+			return false;
 		}
 
 		public void Save()
@@ -45,20 +68,22 @@ namespace RogueLike
 
 		public void Load()
 		{
-			SaveGameStore.LoadPlayer().IfSome(Player.Load);
-			SaveGameStore.LoadMap().IfSome(Map.Load);
+			SaveGameStore.LoadPlayer(Player.Load);
+			SaveGameStore.LoadMap(Map.Load);
 		}
 
-		public async Task<IPlayerAction> EnqueueActionAsync(IPlayerAction action)
+		public Task<IPlayerAction> EnqueueActionAsync(IPlayerAction action)
 		{
-			await _actionQueue.AddAsync(action);
-			return action;
+			_actionQueue.Enqueue(action);
+			_actionAvailable.TrySetResult(false);
+
+			return Task.FromResult(action);
 		}
 
 		public void EndGame()
 		{
 			IsActive = false;
-			_actionQueue.CompleteAdding();
+			_actionAvailable.TrySetResult(true);
 		}
 
 		public void SetStatus(string format, params object[] args)
@@ -67,15 +92,15 @@ namespace RogueLike
 			StatusTtl = 60;
 		}
 
-		public Option<string> GetStatusLine()
+		public string? GetStatusLine()
 		{
 			if (StatusTtl > 0)
 			{
 				StatusTtl--;
-				return Some(StatusLine);
+				return StatusLine;
 			}
 
-			return None;
+			return null;
 		}
 	}
 }

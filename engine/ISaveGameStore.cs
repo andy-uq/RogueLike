@@ -1,11 +1,11 @@
-using LanguageExt;
+using System;
 
 namespace RogueLike
 {
 	public interface ISaveGameStore
 	{
-		Option<PlayerState> LoadPlayer();
-		Option<MapState> LoadMap();
+		PlayerState? LoadPlayer(Action<PlayerState> action);
+		MapState? LoadMap(Action<MapState> action);
 		void Save(PlayerState player);
 		void Save(MapState map);
 	}

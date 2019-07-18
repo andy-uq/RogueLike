@@ -2,85 +2,80 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
-using LanguageExt;
-using static LanguageExt.Prelude;
-using NUnit.Framework;
+using Shouldly;
+using Xunit;
 
 namespace RogueLike.Tests
 {
 	public class ProcessCommands
 	{
-		[TestCase(1, 0, true)]
-		[TestCase(-1, 0, false)]
-		[TestCase(0, -1, false)]
-		[TestCase(1, 1, true)]
+		[Theory]
+		[InlineData(1, 0, true)]
+		[InlineData(-1, 0, false)]
+		[InlineData(0, -1, false)]
+		[InlineData(1, 1, true)]
 		public async Task Move(int x, int y, bool success)
 		{
 			var origin = new Point(1, 1);
 			var player = new Player(position: origin);
 
-			var gameEngine = new GameEngine()
+			var game = new GameEngine(new TestSaveGameStore())
 			{
 				Map = Data.Maps.Small(),
 				Player = player,
 			};
 			
-			var cp = new CommandProcessor(gameEngine);
+			var cp = new CommandProcessor(game);
 			var move = await cp.Move(x, y);
 
 			if (success)
 			{
-				move.Match(
-					m => m.Should().BeOfType<MovePlayerAction>(),
-					() => { throw new InvalidOperationException(); });
+				move.ShouldBeOfType<MovePlayerAction>();
 			}
 			else
 			{
-				move.Some(m => m.Should().BeNull());
+				move.ShouldBeNull();
 			}
 		}
 
-		[Test]
+		[Fact]
 		public async Task OpenDoor()
 		{
 			var player = new Player(position: new Point(1, 1));
 			var map = Data.Maps.HasDoor();
 
-			var gameEngine = new GameEngine()
+			var game = new GameEngine(new TestSaveGameStore())
 			{
 				Map = map,
 				Player = player,
 			};
 
-			var cp = new CommandProcessor(gameEngine);
+			var cp = new CommandProcessor(game);
 			var move = await cp.Move(1, 0);
 
-			move.Match(
-				m => m.Should().BeOfType<OpenDoorAction>(),
-				() => { throw new InvalidOperationException(); });
+			move.ShouldBeOfType<OpenDoorAction>();
 		}
 
-		[Test]
+		[Fact]
 		public void Quit()
 		{
-			var gameEngine = new GameEngine();
+			var gameEngine = new GameEngine(new TestSaveGameStore());
 			var cp = new CommandProcessor(gameEngine);
 
 			cp.Add("quit");
 
-			gameEngine.IsActive.Should().BeFalse();
+			gameEngine.IsActive.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void UnknownCommand()
 		{
-			var gameEngine = new GameEngine();
+			var game = new GameEngine(new TestSaveGameStore());
 
-			var cp = new CommandProcessor(gameEngine);
+			var cp = new CommandProcessor(game);
 			cp.Add("bleh");
 
-			gameEngine.StatusLine.Should().Be("Unknown command: bleh");
+			game.StatusLine.ShouldBe("Unknown command: bleh");
 		}
 	}
 }

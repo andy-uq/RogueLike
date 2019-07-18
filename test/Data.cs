@@ -34,15 +34,15 @@ namespace RogueLike.Tests
 
 		public static class Maps
 		{
-			public readonly static Func<Map> HasMob = () => ToMap(Tiles.HasMob, new[] { new Mobile(0, MobLocation) });
+			public static readonly Func<Map> HasMob = () => ToMap(Tiles.HasMob, new[] { new Mobile(0, MobLocation) });
 			public static Point MobLocation => new Point(3, 1);
 
-			public readonly static Func<Map> HasDoor = () => ToMap(Tiles.HasDoor);
+			public static readonly Func<Map> HasDoor = () => ToMap(Tiles.HasDoor);
 			public static Point DoorLocation => new Point(2, 1);
 
-			public readonly static Func<Map> Small = () => ToMap(Tiles.Small);
+			public static readonly Func<Map> Small = () => ToMap(Tiles.Small);
 
-			private static Map ToMap(char[][] data, IEnumerable<Mobile> mobiles = null)
+			private static Map ToMap(char[][] data, IEnumerable<Mobile>? mobiles = null)
 			{
 				var height = data.Length;
 
@@ -51,11 +51,11 @@ namespace RogueLike.Tests
 					for (var x = 0; x < data[y].Length; x++)
 						tiles[x, y] = data[y][x].ToTile();
 
-				return new Map(tiles, default(Point), mobiles ?? Enumerable.Empty<Mobile>());
+				return new Map(tiles, default, mobiles ?? Enumerable.Empty<Mobile>());
 			}
 		}
 
-		public static List<Monster> Monsters = new List<Monster>() {new Monster()};
-		public static Level Level = new Level() {Map = "map", Monsters = "monsters"};
+		public static readonly List<Monster> Monsters = new List<Monster>() {new Monster(1, "M")};
+		public static readonly Level Level = new Level("map", "monsters");
 	}
 }

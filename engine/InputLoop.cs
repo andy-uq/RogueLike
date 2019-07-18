@@ -7,10 +7,12 @@ namespace RogueLike
 	{
 		private readonly GameEngine _game;
 		private readonly IConsoleInput _consoleInput;
+		private readonly CommandProcessor _commandProcessor;
 
 		public InputLoop(GameEngine game, IConsoleInput consoleInput)
 		{
 			_game = game;
+			_commandProcessor = new CommandProcessor(game);
 			_consoleInput = consoleInput;
 		}
 
@@ -45,7 +47,7 @@ namespace RogueLike
 				switch (key.Key)
 				{
 					case ConsoleKey.Q:
-						_game.CommandProcessor.Add("quit");
+						_commandProcessor.Add("quit");
 						break;
 
 					case ConsoleKey.Backspace:
@@ -53,7 +55,7 @@ namespace RogueLike
 						continue;
 
 					case ConsoleKey.Enter:
-						_game.CommandProcessor.Add(_game.CommandLine);
+						_commandProcessor.Add(_game.CommandLine);
 						extendedCommand = false;
 						_game.CommandLine = "";
 						i = 0;
@@ -66,19 +68,19 @@ namespace RogueLike
 						break;
 
 					case ConsoleKey.UpArrow:
-						await _game.CommandProcessor.Move(yDelta: -1);
+						await _commandProcessor.Move(yDelta: -1);
 						break;
 
 					case ConsoleKey.DownArrow:
-						await _game.CommandProcessor.Move(yDelta: 1);
+						await _commandProcessor.Move(yDelta: 1);
 						break;
 
 					case ConsoleKey.LeftArrow:
-						await _game.CommandProcessor.Move(xDelta: -1);
+						await _commandProcessor.Move(xDelta: -1);
 						break;
 
 					case ConsoleKey.RightArrow:
-						await _game.CommandProcessor.Move(xDelta: +1);
+						await _commandProcessor.Move(xDelta: +1);
 						break;
 				}
 			}

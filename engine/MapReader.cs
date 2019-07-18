@@ -2,20 +2,21 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using RogueLike.Definitions;
 
 namespace RogueLike
 {
 	public class MapReader
 	{
 		private readonly List<Mobile> _mobs;
-		private List<Monster> _monsterDefinitions;
+		private List<Definitions.Monster> _monsterDefinitions;
 		private Point _startingPosition;
 		private readonly IObjectLoader _objectLoader;
 
 		public MapReader(IObjectLoader objectLoader)
 		{
 			_mobs = new List<Mobile>();
+			_monsterDefinitions = new List<Definitions.Monster>();
+
 			_objectLoader = objectLoader;
 		}
 

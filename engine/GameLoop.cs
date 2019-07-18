@@ -21,12 +21,12 @@ namespace RogueLike
 				var context = new GameActionContext(Game);
 				try
 				{
-					var action = await Game.TakeNextActionAsync();
-					action.Act(context);
-
+					if (await Game.TakeNextActionAsync(context))
+						return;
+					
 					foreach (var mobile in Game.Map.Mobiles)
 						mobile.Act(context);
-					
+
 					Game.Save();
 				}
 				catch (InvalidOperationException)

@@ -1,23 +1,23 @@
-﻿using System.IO;
-using LanguageExt;
+﻿using System;
+using System.IO;
 using Newtonsoft.Json;
-using static LanguageExt.Prelude;
 
 namespace RogueLike.Win32
 {
 	public class SaveGameStore : ISaveGameStore
 	{
-		public Option<MapState> LoadMap()
+		public MapState? LoadMap(Action<MapState> action)
 		{
 			if (File.Exists("player.txt"))
 			{
 				var path = Path.Combine("data/save", "mapstate.txt");
 				var json = File.ReadAllText(path);
 				var map = Deserialise<MapState>(json);
-				return Some(map);
+				action(map);
+				return map;
 			}
 
-			return None;
+			return null;
 		}
 
 		public void Save(MapState map)
@@ -34,17 +34,18 @@ namespace RogueLike.Win32
 			File.WriteAllText(path, json);
 		}
 
-		public Option<PlayerState> LoadPlayer()
+		public PlayerState? LoadPlayer(Action<PlayerState> action)
 		{
 			var path = Path.Combine("data/save", "player.txt");
 			if (File.Exists(path))
 			{
 				var json = File.ReadAllText(path);
 				var player = Deserialise<PlayerState>(json);
-				return Some(player);
+				action(player);
+				return player;
 			}
 
-			return None;
+			return null;
 		}
 
 		private static string Serialise(object obj)

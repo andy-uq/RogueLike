@@ -8,7 +8,7 @@ namespace RogueLike
 	[DebuggerDisplay("X={X}, Y={Y} [{Magnitude}]")]
 	public struct Point : IEquatable<Point>, IFormattable
 	{
-		public static readonly Point Zero = default(Point);
+		public static readonly Point Zero = default;
 
 		private const string NUMBER_PATTERN = @"-?\d+(\.\d+)?";
 		private const string POINT_PATTERN = @"\s*
@@ -64,7 +64,7 @@ namespace RogueLike
 		#region IFormattable Members
 
 		[Pure]
-		public string ToString(string format, IFormatProvider fp = null)
+		public string ToString(string format, IFormatProvider? fp = null)
 		{
 			if (String.IsNullOrEmpty(format))
 				format = "G";
@@ -143,5 +143,11 @@ namespace RogueLike
 
 		[Pure]
 		public static Point operator -(Point a, Point b) => new Point(a.X - b.X, a.Y - b.Y);
+
+		public void Deconstruct(out int x, out int y)
+		{
+			x = X;
+			y = Y;
+		}
 	}
 }

@@ -72,7 +72,7 @@ namespace RogueLike
 		#region IFormattable Members
 
 		[Pure]
-		public string ToString(string format, IFormatProvider fp = null)
+		public string ToString(string format, IFormatProvider? fp = null)
 		{
 			if (String.IsNullOrEmpty(format))
 				format = "G";

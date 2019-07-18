@@ -1,32 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
-using LanguageExt;
-using NUnit.Framework;
+using Shouldly;
+using Xunit;
 
 namespace RogueLike.Tests
 {
 	public class Inventory
 	{
-		[Test]
+		[Fact]
 		public void PlayerHasEmptyInventory()
 		{
 			var player = new Player();
-			player.Inventory.Should().BeEmpty();
+			player.Inventory.ShouldBeEmpty();
 		}
 
-		[Test]
+		[Fact]
 		public void CanAddItem()
 		{
 			var item = new PlayerItem();
 			var player = new Player();
 			var playerItem = player.Pickup(item);
 
-			player.Inventory.Should().NotBeEmpty();
-			playerItem.Should().Equal(Prelude.Some(item));
+			player.Inventory.ShouldNotBeEmpty();
+			playerItem.ShouldBe(item);
 		}
 
-		[Test]
+		[Fact]
 		public void CannotAddItemOverCapacity()
 		{
 			var item = new PlayerItem();
@@ -35,10 +34,10 @@ namespace RogueLike.Tests
 			var player = new Player(state);
 			var playerItem = player.Pickup(item);
 
-			playerItem.IsNone.Should().BeTrue();
+			playerItem.ShouldBeNull();
 		}
 
-		[Test]
+		[Fact]
 		public void CanDropItem()
 		{
 			var item = new PlayerItem();
@@ -47,10 +46,10 @@ namespace RogueLike.Tests
 			var player = new Player(state);
 			var droppedItem = player.DropItem(item);
 
-			droppedItem.Should().Equal(Prelude.Some(item));
+			droppedItem.ShouldBe(item);
 		}
 
-		[Test]
+		[Fact]
 		public void CannotDropItemDontOwn()
 		{
 			var item = new PlayerItem();
@@ -58,7 +57,7 @@ namespace RogueLike.Tests
 			var player = new Player();
 			var droppedItem = player.DropItem(item);
 
-			droppedItem.IsNone.Should().BeTrue();
+			droppedItem.ShouldBeNull();
 		}
 	}
 }

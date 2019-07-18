@@ -4,7 +4,7 @@
 	{
 		public char Glyph;
 
-		public virtual TileState Save()
+		public virtual TileState? Save()
 		{
 			return null;
 		}
@@ -34,14 +34,13 @@
 
 		public override Tile Load(TileState state)
 		{
-			var door = state as DoorTileState;
-			if (door != null && door.IsOpen)
+			if (state is DoorTileState door && door.IsOpen)
 				return Tiles.OpenDoor;
 			
 			return base.Load(state);
 		}
 
-		public override TileState Save()
+		public override TileState? Save()
 		{
 			if (IsOpen)
 				return new DoorTileState { IsOpen = IsOpen };

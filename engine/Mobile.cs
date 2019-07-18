@@ -84,7 +84,7 @@ namespace RogueLike
 			return new MobileState
 			{
 				Id = Id,
-				Position = new PointXY {X = Position.X, Y = Position.Y}
+				Position = new PointXY(Position.X, Position.Y)
 			};
 		}
 	}

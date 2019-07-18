@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LanguageExt;
-using static LanguageExt.Prelude;
 
 namespace RogueLike
 {
@@ -28,7 +26,7 @@ namespace RogueLike
 			_game.SetStatus("Unknown command: {0}", command);
 		}
 
-		public async Task<Option<IPlayerAction>> Move(int xDelta = 0, int yDelta = 0)
+		public async Task<IPlayerAction?> Move(int xDelta = 0, int yDelta = 0)
 		{
 			var position = Player.Position.Add(xDelta, yDelta);
 			if (_game.Map.IsOccupied(position))
@@ -37,18 +35,18 @@ namespace RogueLike
 			}
 
 			var movePlayer = new MovePlayerAction(position);
-			return Some(await _game.EnqueueActionAsync(movePlayer));
+			return await _game.EnqueueActionAsync(movePlayer);
 		}
 
-		private async Task<Option<IPlayerAction>> BumpAsync(Point point)
+		private async Task<IPlayerAction?> BumpAsync(Point point)
 		{
 			var tile = _game.Map[point];
 			if (tile == Tiles.ClosedDoor)
 			{
-				return Some(await _game.EnqueueActionAsync(new OpenDoorAction(point)));
+				return await _game.EnqueueActionAsync(new OpenDoorAction(point));
 			}
 
-			return None;
+			return null;
 		}
 	}
 }

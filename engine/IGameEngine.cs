@@ -1,7 +1,6 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LanguageExt;
-using Nito.AsyncEx;
 
 namespace RogueLike
 {
@@ -11,12 +10,11 @@ namespace RogueLike
 		void SetStatus(string format, params object[] args);
 		Map Map { get; }
 		Player Player { get; }
-		IObjectLoader ObjectLoader { get; }
 
 		bool IsActive { get; }
 
 		Task<IPlayerAction> EnqueueActionAsync(IPlayerAction action);
-      Task<IPlayerAction> TakeNextActionAsync();
+		Task<bool> TakeNextActionAsync(GameActionContext context);
 
 		void Load();
 		void Save();

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace RogueLike
@@ -36,9 +37,49 @@ namespace RogueLike
 		public PointXY Coordinates { get; set; }
 	}
 
-	public struct PointXY
+	public struct PointXY : IEquatable<PointXY>
 	{
-		public int X { get; set; }
-		public int Y { get; set; }
+		public int X { get; }
+		public int Y { get; }
+
+		public PointXY(int x, int y)
+		{
+			X = x;
+			Y = y;
+		}
+
+		public bool Equals(PointXY other)
+		{
+			return X == other.X && Y == other.Y;
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is PointXY other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return (X * 397) ^ Y;
+			}
+		}
+
+		public static bool operator ==(PointXY left, PointXY right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(PointXY left, PointXY right)
+		{
+			return !left.Equals(right);
+		}
+
+		public void Deconstruct(out int x, out int y)
+		{
+			x = X;
+			y = Y;
+		}
 	}
 }

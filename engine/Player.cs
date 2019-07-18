@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using LanguageExt;
-using static LanguageExt.Prelude;
 
 namespace RogueLike
 {
@@ -25,20 +23,20 @@ namespace RogueLike
 		public IEnumerable<PlayerItem> Inventory { get { return _inventory; } }
 		public static int CarryingCapacity { get { return 10; } }
 
-		public Option<PlayerItem> Pickup(PlayerItem item)
+		public PlayerItem? Pickup(PlayerItem item)
 		{
 			if (_inventory.Count >= CarryingCapacity)
-				return None;
+				return null;
 
 			_inventory.Add(item);
-			return Some(item);
+			return item;
 		}
 
-		public Option<PlayerItem> DropItem(PlayerItem item)
+		public PlayerItem? DropItem(PlayerItem item)
 		{
 			return _inventory.Remove(item) 
-				? Some(item) 
-				: None;
+				? item 
+				: null;
 		}
 
 		public PlayerState Save()
@@ -46,7 +44,7 @@ namespace RogueLike
 			return new PlayerState
 			{
 				Inventory = _inventory,
-				Position = new PointXY {X = Position.X, Y = Position.Y}
+				Position = new PointXY(Position.X, Position.Y)
 			};
 		}
 

@@ -18,23 +18,25 @@ namespace RogueLike
 		}
 
 		public Point Dimensions { get; }
-		public Point StartingPosition { get; private set; }
+		public Point StartingPosition { get; }
 
 		public Tile this[int x, int y] => _tiles[x, y];
 
 		public Tile this[Point point]
 		{
-			get { return _tiles[point.X, point.Y]; }
-			private set { _tiles[point.X, point.Y] = value; }
+			get => _tiles[point.X, point.Y];
+			private set => _tiles[point.X, point.Y] = value;
 		}
 
 		private Tile this[PointXY point]
 		{
-			get { return _tiles[point.X, point.Y]; }
-			set { _tiles[point.X, point.Y] = value; }
+			get => _tiles[point.X, point.Y];
+			set => _tiles[point.X, point.Y] = value;
 		}
 
 		public IEnumerable<Mobile> Mobiles => _mobs;
+		
+		public static readonly Map Empty = new Map(new Tile[0,0], Point.Zero, Enumerable.Empty<Mobile>());
 
 		public bool CanSee(Point source, Point target) => new VisibilityCheck(_tiles).CanSee(source, target);
 
@@ -104,7 +106,7 @@ namespace RogueLike
 					if (state == null)
 						continue;
 
-					state.Coordinates = new PointXY {X = x, Y = y};
+					state.Coordinates = new PointXY(x,y);
 					yield return state;
 				}
 			}

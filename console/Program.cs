@@ -10,26 +10,19 @@ namespace RogueLike.Console
 		private static GameLoop _gameLoop;
 		private static InputLoop _inputLoop;
 
-		private static void Main(string[] args)
+		private static Task Main(string[] args)
 		{
-			var engine = new GameEngine
+			var engine = new GameEngine(new SaveGameStore())
 			{
-				IsActive = true,
 				CommandLine = "",
-				ObjectLoader = new ObjectLoader(),
-				SaveGameStore = new SaveGameStore(),
 				Player = new Player()
 			};
 
-			engine.CommandProcessor = new CommandProcessor(engine);
-
-			var reader = new MapReader(engine.ObjectLoader);
+			var reader = new MapReader(new ObjectLoader());
 			engine.Map = reader.LoadLevel("level01.txt");
 
-			var playerState = engine.SaveGameStore.LoadPlayer();
-			playerState.Match(
-					state => engine.Player = new Player(state),
-					() => engine.Map.InitialiseLevel(engine.Player));
+			engine.SaveGameStore.LoadPlayer(state => engine.Player = new Player(state));
+			engine.Map.InitialiseLevel(engine.Player);
 
 			_renderLoop = new RenderLoop(engine, new RawConsole());
 			_inputLoop = new InputLoop(engine, new RawConsole());
@@ -39,9 +32,7 @@ namespace RogueLike.Console
 			var game = Task.Run(() => _gameLoop.GameLoopAsync());
 			var input = Task.Run(() => _inputLoop.InputLoopAsync());
 
-			var task = Task.WhenAll(input, render, game);
-			var awaiter = task.GetAwaiter();
-			awaiter.GetResult();
+			return Task.WhenAll(input, render, game);
 		}
 	}
 }
