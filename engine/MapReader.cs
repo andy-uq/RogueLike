@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace RogueLike
@@ -8,9 +7,10 @@ namespace RogueLike
 	public class MapReader
 	{
 		private readonly List<Mobile> _mobs;
-		private List<Definitions.Monster> _monsterDefinitions;
-		private Point _startingPosition;
 		private readonly IObjectLoader _objectLoader;
+
+		private List<Definitions.Monster> _monsterDefinitions;
+		private Point                     _startingPosition;
 
 		public MapReader(IObjectLoader objectLoader)
 		{

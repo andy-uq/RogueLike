@@ -31,7 +31,6 @@ namespace RogueLike
 				}
 				catch (InvalidOperationException)
 				{
-					continue;
 				}
 			}
 		}

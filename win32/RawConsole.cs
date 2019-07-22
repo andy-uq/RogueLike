@@ -24,6 +24,7 @@ namespace RogueLike.Win32
 				return;
 
 			_cursorPosition = new Win32Console.Coord(2 - 1, 25 - 1);
+
 			Win32Console.SetConsoleCursorPosition(_draw, _cursorPosition);
 			Win32Console.SetConsoleCursorPosition(_active, _cursorPosition);
 		}
@@ -35,8 +36,8 @@ namespace RogueLike.Win32
 
 		public void SetCursorPosition(Point point)
 		{
-			int column = point.X;
-			int row = point.Y;
+			var column = point.X;
+			var row = point.Y;
 
 			if (_cursorPosition.X == column - 1 && _cursorPosition.Y == row - 1)
 				return;
@@ -58,9 +59,8 @@ namespace RogueLike.Win32
 
 		private void Clear()
 		{
-			uint count;
-			Win32Console.FillConsoleOutputCharacter(_draw, ' ', 80*24, new Win32Console.Coord(), out count);
-			Win32Console.FillConsoleOutputAttribute(_draw, ToColourAttribute(ConsoleColor.Gray, ConsoleColor.Black), 80*24, new Win32Console.Coord(), out count);
+			Win32Console.FillConsoleOutputCharacter(_draw, ' ', 80*24, new Win32Console.Coord(), out _);
+			Win32Console.FillConsoleOutputAttribute(_draw, ToColourAttribute(ConsoleColor.Gray, ConsoleColor.Black), 80*24, new Win32Console.Coord(), out _);
 		}
 
 		public void SetColour(ConsoleColor colour, ConsoleColor? backColor = null)

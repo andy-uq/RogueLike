@@ -27,7 +27,7 @@ namespace RogueLike.Tests
 		public void CanCreateMapReader()
 		{
 			var objectLoader = new TestObjectLoader();
-			new MapReader(objectLoader);
+			_ = new MapReader(objectLoader);
 		}
 
 		[Fact]

@@ -1,25 +1,26 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29111.141
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{67D5FEC5-7E15-410D-9912-338CA3815C01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "test", "test\test.csproj", "{67D5FEC5-7E15-410D-9912-338CA3815C01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "win32", "win32\win32.csproj", "{E1764D05-A160-4450-A59F-F1841852FB57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "win32", "win32\win32.csproj", "{E1764D05-A160-4450-A59F-F1841852FB57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "console", "console\console.csproj", "{33AFAEB6-2AF1-4370-A711-0695444EA320}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console", "console\console.csproj", "{33AFAEB6-2AF1-4370-A711-0695444EA320}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{495F0365-5CDD-4732-BAA2-1E7583F56566}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1", "1", "{4636283F-F01A-453C-A274-FDAEF9C58552}"
 	ProjectSection(SolutionItems) = preProject
-		item01.txt = item01.txt
-		level01.txt = level01.txt
-		map01.txt = map01.txt
-		monster01.txt = monster01.txt
+		data\item01.txt = data\item01.txt
+		data\items.txt = data\items.txt
+		data\level01.txt = data\level01.txt
+		data\map01.txt = data\map01.txt
+		data\monster01.txt = data\monster01.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "engine", "engine\engine.csproj", "{CC782B1A-4E14-44B9-A97A-B802F9EB4B97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "engine", "engine\engine.csproj", "{CC782B1A-4E14-44B9-A97A-B802F9EB4B97}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,5 +50,8 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4636283F-F01A-453C-A274-FDAEF9C58552} = {495F0365-5CDD-4732-BAA2-1E7583F56566}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4A9920BC-1004-4741-93F0-841E65C7D336}
 	EndGlobalSection
 EndGlobal

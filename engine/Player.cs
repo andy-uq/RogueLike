@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 
 namespace RogueLike
 {
@@ -20,8 +19,8 @@ namespace RogueLike
 		}
 
 		public Point Position { get; set; }
-		public IEnumerable<PlayerItem> Inventory { get { return _inventory; } }
-		public static int CarryingCapacity { get { return 10; } }
+		public IEnumerable<PlayerItem> Inventory => _inventory;
+		public static int CarryingCapacity => 10;
 
 		public PlayerItem? Pickup(PlayerItem item)
 		{

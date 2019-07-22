@@ -44,9 +44,9 @@ namespace RogueLike
 			Z = z;
 		}
 
-		public double X { get; private set; }
-		public double Y { get; private set; }
-		public double Z { get; private set; }
+		public double X { get; }
+		public double Y { get; }
+		public double Z { get; }
 
 		public double Magnitude
 		{
@@ -109,7 +109,7 @@ namespace RogueLike
 
 		public override bool Equals(object obj)
 		{
-			if (obj.GetType() != typeof (Vector))
+			if (obj?.GetType() != typeof (Vector))
 				return false;
 
 			return Equals((Vector) obj);
@@ -158,7 +158,7 @@ namespace RogueLike
 		[Pure]
 		public Vector ToUnitVector()
 		{
-			double magnitude = Magnitude;
+			var magnitude = Magnitude;
 
 			if (Units.IsZero(magnitude))
 				throw new ArgumentException("Cannot create a unit vector from the Zero vector");
