@@ -39,7 +39,9 @@ namespace RogueLike
 
 		public async Task<bool> TakeNextActionAsync(GameActionContext context)
 		{
-			if (!_actionQueue.TryDequeue(out var action))
+			IPlayerAction action;
+
+			while (!_actionQueue.TryDequeue(out action))
 			{
 				var finished = await _actionAvailable.Task;
 				if (finished)
@@ -74,7 +76,7 @@ namespace RogueLike
 
 		public Task<IPlayerAction> EnqueueActionAsync(IPlayerAction action)
 		{
-			_actionQueue.Enqueue(action);
+			_actionQueue.Enqueue(action ?? throw new ArgumentNullException(nameof(action)));
 			_actionAvailable.TrySetResult(false);
 
 			return Task.FromResult(action);

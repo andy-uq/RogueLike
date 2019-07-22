@@ -6,13 +6,21 @@ namespace RogueLike.Win32
 {
 	public class SaveGameStore : ISaveGameStore
 	{
-		private static JsonSerializerSettings s_jsonSerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+		private static readonly JsonSerializerSettings s_jsonSerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+		
+		private readonly string _savePath;
+
+		public SaveGameStore()
+		{
+			var save = Directory.CreateDirectory(Path.Combine("data/save"));
+			_savePath = save.FullName;
+		}
 
 		public MapState? LoadMap(Action<MapState> action)
 		{
-			if (File.Exists("player.txt"))
+			if (File.Exists(Path.Combine(_savePath, "player.txt")))
 			{
-				var path = Path.Combine("data/save", "mapstate.txt");
+				var path = Path.Combine(_savePath, "mapstate.txt");
 				var json = File.ReadAllText(path);
 				var map = Deserialise<MapState>(json);
 				action(map);
@@ -24,21 +32,21 @@ namespace RogueLike.Win32
 
 		public void Save(MapState map)
 		{
-			var path = Path.Combine("data/save", "mapstate.txt");
+			var path = Path.Combine(_savePath, "mapstate.txt");
 			var json = Serialise(map);
 			File.WriteAllText(path, json);
 		}
 
 		public void Save(PlayerState player)
 		{
-			var path = Path.Combine("data/save", "player.txt");
+			var path = Path.Combine(_savePath, "player.txt");
 			var json = Serialise(player);
 			File.WriteAllText(path, json);
 		}
 
 		public PlayerState? LoadPlayer(Action<PlayerState> action)
 		{
-			var path = Path.Combine("data/save", "player.txt");
+			var path = Path.Combine(_savePath, "player.txt");
 			if (File.Exists(path))
 			{
 				var json = File.ReadAllText(path);

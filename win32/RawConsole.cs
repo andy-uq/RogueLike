@@ -52,6 +52,11 @@ namespace RogueLike.Win32
 			var temp = _draw;
 			_draw = _active;
 			_active = temp;
+			
+			Win32Console.GetConsoleCursorInfo(_active, out var cursorInfo);
+			cursorInfo.Visible = false;
+			Win32Console.SetConsoleCursorInfo(_active, ref cursorInfo);
+			
 			Win32Console.SetConsoleActiveScreenBuffer(_active);
 
 			Clear();
