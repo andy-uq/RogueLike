@@ -17,7 +17,7 @@ namespace RogueLike
 												(,\s*(?<z>" + NUMBER_PATTERN + @"))?
 											   \s*";
 
-		private static readonly Regex _parseVector =
+		private static readonly Regex s_parseVector =
 			new Regex(
 				@"^
 										(
@@ -128,7 +128,7 @@ namespace RogueLike
 
 		public static Vector Parse(string value)
 		{
-			Match m = _parseVector.Match(value.Trim());
+			Match m = s_parseVector.Match(value.Trim());
 			if (m.Success)
 			{
 				double x = double.Parse(m.Groups["x"].Value);

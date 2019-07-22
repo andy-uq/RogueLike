@@ -6,6 +6,8 @@ namespace RogueLike.Win32
 {
 	public class SaveGameStore : ISaveGameStore
 	{
+		private static JsonSerializerSettings s_jsonSerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+
 		public MapState? LoadMap(Action<MapState> action)
 		{
 			if (File.Exists("player.txt"))
@@ -50,12 +52,12 @@ namespace RogueLike.Win32
 
 		private static string Serialise(object obj)
 		{
-			return Newtonsoft.Json.JsonConvert.SerializeObject(obj, Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto });
+			return JsonConvert.SerializeObject(obj, Formatting.Indented, s_jsonSerializerSettings);
 		}
 
 		private static T Deserialise<T>(string json)
 		{
-			return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto });
+			return JsonConvert.DeserializeObject<T>(json, s_jsonSerializerSettings);
 		}
 	}
 }

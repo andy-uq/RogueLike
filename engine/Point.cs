@@ -16,7 +16,7 @@ namespace RogueLike
 												,\s*(?<y>" + NUMBER_PATTERN + @")?
 											   \s*";
 
-		private static readonly Regex _parsePoint =
+		private static readonly Regex s_parsePoint =
 			new Regex(
 				@"^
 										(
@@ -115,7 +115,7 @@ namespace RogueLike
 
 		public static Point Parse(string value)
 		{
-			Match m = _parsePoint.Match(value.Trim());
+			Match m = s_parsePoint.Match(value.Trim());
 			if (m.Success)
 			{
 				int x = int.Parse(m.Groups["x"].Value);

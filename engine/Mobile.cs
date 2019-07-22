@@ -32,7 +32,7 @@ namespace RogueLike
 
 			if (newPosition == context.Player.Position)
 			{
-				AttackPlayer(context);
+				AttackPlayer();
 				return;
 			}
 
@@ -46,8 +46,9 @@ namespace RogueLike
 			}
 		}
 
-		private void AttackPlayer(GameActionContext context)
+		private void AttackPlayer()
 		{
+			
 		}
 
 		private void MoveTo(GameActionContext context, Point newPosition)

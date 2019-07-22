@@ -25,7 +25,7 @@ namespace RogueLike
 			if (x > y)
 			{
 				var dX = (target.X > source.X) ? 1 : -1;
-				var dY = x == 0 ? double.NaN : (double)y / (double)x;
+				var dY = x == 0 ? double.NaN : y / (double)x;
 				if (target.Y < source.Y)
 					dY *= -1;
 
@@ -34,7 +34,7 @@ namespace RogueLike
 			else
 			{
 				var dY = (target.Y > source.Y) ? 1 : -1;
-				var dX = x == 0 ? double.NaN : (double)y / (double)x;
+				var dX = x == 0 ? double.NaN : y / (double)x;
 				if (target.X < source.X)
 					dX *= -1;
 
