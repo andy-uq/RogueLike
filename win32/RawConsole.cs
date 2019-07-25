@@ -6,10 +6,13 @@ namespace RogueLike.Win32
 	{
 		private readonly IntPtr _primaryHandle;
 		private IntPtr _active, _draw;
+
 		private Win32Console.Coord _cursorPosition;
+		private (bool visible, uint size) _cursor;
 
 		private ConsoleColor _foreColour;
 		private ConsoleColor _backColour;
+		private bool _dirty;
 
 		public RawConsole()
 		{
@@ -19,9 +22,6 @@ namespace RogueLike.Win32
 
 			_foreColour = ConsoleColor.Gray;
 			_backColour = ConsoleColor.Black;
-
-			if (_cursorPosition.X == 2 - 1 && _cursorPosition.Y == 25 - 1)
-				return;
 
 			_cursorPosition = new Win32Console.Coord(2 - 1, 25 - 1);
 
@@ -39,27 +39,43 @@ namespace RogueLike.Win32
 			var column = point.X;
 			var row = point.Y;
 
-			if (_cursorPosition.X == column - 1 && _cursorPosition.Y == row - 1)
+			if (_cursorPosition.X == column - 1
+			    && _cursorPosition.Y == row - 1)
+			{
 				return;
+			}
 
 			_cursorPosition = new Win32Console.Coord(column - 1, row - 1);
-			Win32Console.SetConsoleCursorPosition(_draw, _cursorPosition);
-			Win32Console.SetConsoleCursorPosition(_active, _cursorPosition);
+			_cursor = (true, (uint) 100);
+			_dirty = true;
+		}
+
+		public void ClearCursorPosition()
+		{
+			_cursor = (false, (uint) 0);
+			_dirty = true;
 		}
 
 		public void SwapBuffers()
 		{
-			var temp = _draw;
-			_draw = _active;
-			_active = temp;
+			if (_dirty)
+			{
+				var temp = _draw;
+				_draw   = _active;
+				_active = temp;
 			
-			Win32Console.GetConsoleCursorInfo(_active, out var cursorInfo);
-			cursorInfo.Visible = false;
-			Win32Console.SetConsoleCursorInfo(_active, ref cursorInfo);
+				Win32Console.GetConsoleCursorInfo(_active, out var cursorInfo);
+				cursorInfo.Visible = _cursor.visible;
+				cursorInfo.Size    = 50;
+				Win32Console.SetConsoleCursorInfo(_active, ref cursorInfo);
+				Win32Console.SetConsoleCursorPosition(_active, _cursorPosition);
 			
-			Win32Console.SetConsoleActiveScreenBuffer(_active);
+				Win32Console.SetConsoleActiveScreenBuffer(_active);
 
-			Clear();
+				Clear();
+			}
+
+			_dirty = false;
 		}
 
 		private void Clear()
@@ -98,6 +114,7 @@ namespace RogueLike.Win32
 			var rect = new Win32Console.SmallRect() {Left = x, Right = (short) (x + length), Top = y, Bottom = (short) (y + 1)};
 
 			Win32Console.WriteConsoleOutput(_draw, buffer, dwBufferSize, dwBufferCoord, ref rect);
+			_dirty = true;
 		}
 
 		private ushort ToColourAttribute(ConsoleColor? color, ConsoleColor? backColor)

@@ -18,7 +18,7 @@ namespace RogueLike
 			_actionAvailable = new TaskCompletionSource<bool>();
 
 			SaveGameStore = saveGameStore;
-			CommandLine = string.Empty;
+			CommandLine = null;
 			StatusLine = null;
 			Player = new Player();
 			Map = Map.Empty;
@@ -31,7 +31,7 @@ namespace RogueLike
 		public string? StatusLine { get; private set; }
 		public int StatusTtl { get; private set; }
 
-		public string CommandLine { get; set; }
+		public string? CommandLine { get; set; }
 		public Player Player { get; set; }
 		public Map Map { get; set; }
 		

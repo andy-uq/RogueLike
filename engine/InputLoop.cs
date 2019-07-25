@@ -19,7 +19,6 @@ namespace RogueLike
 		public async Task InputLoopAsync()
 		{
 			var commandBuffer = new char[80];
-			var extendedCommand = false;
 			var i = 0;
 
 			while (_game.IsActive)
@@ -28,7 +27,7 @@ namespace RogueLike
 
 				if (!char.IsControl(key.KeyChar))
 				{
-					if (extendedCommand)
+					if (_game.CommandLine != null && i < commandBuffer.Length)
 					{
 						commandBuffer[i++] = key.KeyChar;
 						_game.CommandLine = new string(commandBuffer, 0, i);
@@ -40,7 +39,8 @@ namespace RogueLike
 				switch (key.KeyChar)
 				{
 					case '`':
-						extendedCommand = true;
+						_game.CommandLine = string.Empty;
+						i = 0;
 						continue;
 				}
 
@@ -54,16 +54,13 @@ namespace RogueLike
 						i = i == 0 ? 0 : i - 1;
 						continue;
 
-					case ConsoleKey.Enter:
+					case ConsoleKey.Enter when _game.CommandLine != null:
 						_commandProcessor.Add(_game.CommandLine);
-						extendedCommand = false;
-						_game.CommandLine = "";
-						i = 0;
+						_game.CommandLine = null;
 						break;
 
 					case ConsoleKey.Escape:
-						extendedCommand = false;
-						_game.CommandLine = "";
+						_game.CommandLine = null;
 						i = 0;
 						break;
 

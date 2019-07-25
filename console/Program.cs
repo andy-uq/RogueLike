@@ -14,7 +14,6 @@ namespace RogueLike.Console
 		{
 			var engine = new GameEngine(new SaveGameStore())
 			{
-				CommandLine = "",
 				Player = new Player()
 			};
 

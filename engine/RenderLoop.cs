@@ -32,12 +32,15 @@ namespace RogueLike
 
 			while (Game.IsActive)
 			{
-				RenderFrame(frameTimer);
-				frameTimer.Stop();
+				RenderFrame();
+				_frame++;
 
-				var delay = 16.7 - frameTimer.ElapsedMilliseconds;
+				var delay = (1_000.0 / 60.0) - frameTimer.ElapsedMilliseconds;
 				if (delay > 0)
 					await Task.Delay((int)delay);
+
+				UpdateFps(frameTimer);
+				Console.SwapBuffers();
 
 				frameTimer.Restart();
 			}
@@ -45,23 +48,25 @@ namespace RogueLike
 			Console.Restore();
 		}
 
-		private void RenderFrame(Stopwatch frameTimer)
+		private void RenderFrame()
 		{
 			RenderMap(Game.Player.Position, Game.Map);
 
-			Console.Write(Position.CommandLine, Game.CommandLine);
-			Console.SetCursorPosition(Position.CommandLine.OffsetX(Game.CommandLine.Length));
+			if (Game.CommandLine != null)
+			{
+				Console.Write(Position.CommandLine, Game.CommandLine);
+				Console.SetCursorPosition(Position.CommandLine.OffsetX(Game.CommandLine.Length));
+			}
+			else
+			{
+				Console.ClearCursorPosition();
+			}
 
 			var status = Game.GetStatusLine();
 			if (status != null)
 			{
 				Console.Write(Position.StatusLine, status, ConsoleColor.DarkRed);
 			}
-
-			_frame++;
-			UpdateFps(frameTimer);
-
-			Console.SwapBuffers();
 		}
 
 		private void UpdateFps(Stopwatch frameTimer)
